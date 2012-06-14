@@ -8,7 +8,7 @@
 */
 
 #include "chromosome.h"
-#include "string.h"
+#include "string"
 #include "cstdio"
 #include "cstdlib"
 
@@ -67,12 +67,12 @@ event *parseNotes(note notes[], int numNotes)
 		tmp.state = 0;
 		tmp.note = i;
 
-		event[2*i] = tmp;
+		events[2*i] = tmp;
 
 		tmp.time = end;
 		tmp.state = 1;
 
-		event[2*i+1] = tmp;
+		events[2*i+1] = tmp;
 	}
 
 	return events;
