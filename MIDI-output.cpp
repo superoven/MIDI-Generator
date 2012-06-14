@@ -8,9 +8,11 @@
 */
 
 #include "chromosome.h"
-#include "string"
-#include "cstdio"
-#include "cstdlib"
+#include <string>
+#include <cstdio>
+#include <cstdlib>
+#include <stdint.h>
+#include <inttypes.h>
 
 typedef struct
 {
@@ -97,8 +99,51 @@ void sortEvents(event events[], int len)
 	}
 }
 
-int outputFile(event events[], string file)
+int outputFile(string file, event events[], int numEvents)
 {
+	FILE* out;
+
+	out = fopen(file.c_str(), "wb");
+	if(out == NULL)
+		return -1;
+	/* Header info */
+	char chunkID[4] = "MThd";
+	char chunkSize[4] = {0,0,0,6};
+	char formatType[2] = {0,0}
+	char numTracks[2] = {0,1}
+	char timeDivision[2] = {0x01,0xE0}
+
+	fwrite(chunkID, 1, 4, out);
+	fwrite(chunkSize, 4, 1, out);
+	fwrite(formatType, 2, 1, out);
+	fwrite(numTracks, 2, 1, out);
+	fwrite(timeDivision, 2, 1, out);
+
+	/* Track info */
+	uint32_t track_len = 0;
+	char trackData[4294967296];
+	char endOfTrack = 0xFF;
+
+	/* Conversion of notes into MIDI events */
+	for(int i=0;i<numEvents;i++)
+	{
+		if(events[i].state==0)
+			trackData[track_len++] = 0x80
+		else
+			trackData[track_len++] = 0x90
+		trackData[track_len++] = events[i].note.pitch%128;
+		trackData[track_len++] = 0x00;
+	}
+
+	chunkID = "MTrk";
+	chunkSize = {((track_len>>24)&255),
+				((track_len>>16)&255),
+				((track_len>>8)&255),
+				(track_len&255)};
+
+	fwrite(trackData, tracklen, 1, out);
+	fwrite(endOfTrack, 1, 1, out);
+
 	return 0;
 }
 
@@ -115,5 +160,5 @@ int createMidi(chromosome C, string file)
 
 	sortEvents(events,2*numNotes);
 
-	return outputFile(events,file);
+	return outputFile(file,events,2*numNotes);
 }
