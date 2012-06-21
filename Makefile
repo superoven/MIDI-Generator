@@ -1,15 +1,15 @@
-SOURCES := testchrom.cpp chromosome.cpp
-HEADERS := chromosome.h
+SOURCES := genetic.cpp chromosome.cpp MIDI-output.cpp fitness.cpp
+HEADERS := $(addprefix src/, chromosome.h genetic.h)
 
 TCHROM := testchrom.cpp chromosome.cpp
-TCHROMOBJ :=$(TCHROM:.cpp=.o)
+TCHROMOBJ := $(addprefix obj/, $(TCHROM:.cpp=.o))
 
 TMIDI := MIDI-output.cpp testmidi.cpp chromosome.cpp
-TMIDIOBJ :=$(TMIDI:.cpp=.o)
+TMIDIOBJ := $(addprefix obj/, $(TMIDI:.cpp=.o))
 
 CC := g++
 CFLAGS := -g -Wall
-OBJECTS :=$(SOURCES:.cpp=.o)
+OBJECTS := $(addprefix obj/, $(SOURCES:.cpp=.o))
 EXECUTABLE := genetic
 
 all: $(SOURCES) $(EXECUTABLE)
@@ -23,8 +23,8 @@ testmidi: $(TMIDIOBJ) $(HEADERS)
 $(EXECUTABLE): $(OBJECTS) $(HEADERS)
 	$(CC) $(OBJECTS) -o $@
 
-.cpp.o:
+obj/%.o: src/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm *.o $(EXECUTABLE) testchrom
+	rm -f obj/*.o $(EXECUTABLE) testchrom testmidi src/*~
