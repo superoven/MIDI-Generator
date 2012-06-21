@@ -19,7 +19,7 @@ chromosome::chromosome(int len)
 {
   //Constructor
   //If fitness is -1, it hasn't been set by the algorithm yet.
-  
+
   bytes = new char[len];
   length = len;
   fitness = -1;
@@ -57,6 +57,8 @@ char chromosome::getByte(int num) { return bytes[num]; }
 long chromosome::getLength() { return length; }
 
 double chromosome::getFitness() { return fitness; }
+
+void chromosome::setByte(int num, char A) { bytes[num] = A; }
   
 void chromosome::setFitness(double arg) { fitness = ((arg > 0) ? arg : 0); }
 
@@ -69,4 +71,24 @@ void chromosome::mutate()
   int randbit = rand() % GENE_LENGTH;
   bytes[randbyte] ^= 1 << randbit;
   fitness = -1;
+}
+
+void crossover(chromosome& a, chromosome& b) 	//combine chromosome a and b
+{
+  int point = (int) rand() % a.getLength();
+  int bufferlen = a.getLength() - point;
+  char* buffer1 = new char [bufferlen];
+  char* buffer2 = new char [bufferlen];
+
+  for (int i = 0; i < bufferlen; i++) {
+    buffer1[i] = a.getByte(point + i);
+    buffer2[i] = b.getByte(point + i);
+  }
+  for (int i = 0; i < bufferlen; i++) {
+    a.setByte(point + i, buffer2[i]);
+    b.setByte(point + i, buffer1[i]);
+  }
+    
+  delete buffer1;
+  delete buffer2;
 }
