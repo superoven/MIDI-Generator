@@ -73,7 +73,7 @@ void chromosome::mutate()
   fitness = -1;
 }
 
-void crossover(chromosome& a, chromosome& b) 	//combine chromosome a and b
+void chromosome::crossover(chromosome& a, chromosome& b) 	//combine chromosome a and b
 {
   int point = (int) rand() % a.getLength();
   int bufferlen = a.getLength() - point;
@@ -88,9 +88,8 @@ void crossover(chromosome& a, chromosome& b) 	//combine chromosome a and b
     a.setByte(point + i, buffer2[i]);
     b.setByte(point + i, buffer1[i]);
   }
-  
-  a.setFitness(-1); //These are totally new, so if they had a fitness, they are back to not having one.
-  b.setFitness(-1);
+  a.fitness = -1; //These are totally new, so if they had a fitness, they are back to not having one.
+  b.fitness = -1;
 
   delete buffer1; //Clean up allocated memory
   delete buffer2;

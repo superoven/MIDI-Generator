@@ -19,12 +19,13 @@ int main()
   jim.printChromosome();
   cout << "Printing out \'bob\':\n";
   bob.printChromosome();
-  cout << "\nPerforming crossover on \'jim\' and \'bob\':\n";
-  crossover(jim,bob);
+  cout << "Performing crossover on \'jim\' and \'bob\':\n";
+  chromosome::crossover(jim,bob);
   cout << "Printing out \'jim\':\n";
   jim.printChromosome();
   cout << "Printing out \'bob\':\n";
   bob.printChromosome();
+  assert(jim.getFitness() == -1);
 
   chromosome becky(32);
   becky.setFitness(2.56);

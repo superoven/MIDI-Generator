@@ -7,6 +7,7 @@
 #ifndef GENETIC_H
 #define GENETIC_H
 
+#define CHROMO_LENGTH 300
 #define CROSSOVER_RATE 0.7
 #define MUTATION_RATE 0.001
 #define POP_SIZE 100

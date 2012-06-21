@@ -7,7 +7,6 @@
 #ifndef CHROMOSOME_H
 #define CHROMOSOME_H
 
-#define CHROMO_LENGTH 300
 #define GENE_LENGTH 8
 #define GENE_POSSIBILITIES 256 		//must be = 2^GENE_LENGTH 
 #define PRINT_BYTES_PER_LINE 16
@@ -32,8 +31,9 @@ public:
   void mutate();					//mutate this chromosome
 
   static int getNumChromosomes() { return numchromosomes; }
+  static void crossover(chromosome& a, chromosome& b);
 };
 
-void crossover(chromosome& a, chromosome& b);
+
 
 #endif
