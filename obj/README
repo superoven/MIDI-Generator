@@ -1,0 +1,1 @@
+This is where object files are dumped. This file is mostly here so that git will actually push the directory regardless of when its empty because you did a make clean.
