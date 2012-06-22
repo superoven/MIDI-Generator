@@ -29,12 +29,12 @@ int main()
 	for(int i=0;i<5;i++)
 	{
 		pos = 0;
-		notes.setByte(5*i + pos + 1, 2);
+		notes.setByte(16*i + pos + 1, 2);
 		for(pos=1;pos<note_len;pos++)
-			notes.setByte(5*i + pos + 1, 1);
+			notes.setByte(16*i + pos + 1, 1);
 		for(;pos<16;pos++)
-			notes.setByte(5*i + pos + 1, 0);
-		note_len++;
+			notes.setByte(16*i + pos + 1, 0);
+		note_len*=2;
 	}
 
 	if(createMidi(&notes,1,"notes.mid")==0)
