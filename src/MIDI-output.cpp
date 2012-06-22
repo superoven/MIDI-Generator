@@ -1,10 +1,13 @@
-/*  When the chromosome is passed into the MIDI function it will be converted
-	into the an array of notes. These notes are then split into their specific
-	note-on and note-off events to make sorting easier. These events are then
-	sorted, parsed, and outputed to the MIDI file
-
-	Call createMidi to output the file, returns 0 if no errors and returns a
+/*  Call createMidi to output the file, returns 0 if no errors and returns a
 	non-zero value if an error occurred
+
+	createMidi is called with an array of chromosomes so that the melody and
+	accompaniment can be outputed with 1 function call
+
+	When the chromosome is parsed, it will be converted	into the an array of
+	notes. These notes are then split into their specific note-on and note-off
+	events to make sorting easier. These events are then sorted, parsed, and
+	outputed to the MIDI file
 */
 
 #include "chromosome.h"
@@ -16,11 +19,21 @@
 
 using namespace std;
 
-uint16_t ticks_per_quarter; // Number of delta time ticks per quarter note
+#define TICKS_PER_QUARTER  120 // Number of delta time ticks per quarter note
+#define MELODY_BASE_VELOCITY 100 //Base MIDI velocity for melody notes
+#define ACCOMP_BASE_VELOCITY 60  //Base MIDI velocity for accompaniment notes
+#define DELTA_HARD 20	// Change in velocity for a hard accented note
+#define LOW_TEMPO 180
+#define HIGH_TEMPO 210
+#define DELTA_TEMPO ((HIGH_TEMPO-LOW_TEMPO)/15)
+
+int BPM;
 
 typedef struct
 {
-	int start,end,pitch;
+	int start,end;
+	char pitch,velocity;
+	bool melody;
 } note;
 
 typedef struct
@@ -33,16 +46,23 @@ typedef struct
 int chromosomeNumNotes(chromosome C)
 {
 	int numNotes = 0;
+	char tmp;
 
-	/* test for notes .... 
-	   make sure not to increment for rests
-		numNotes++ */
+	for(int i=1;i<C.getLength();i++)
+	{
+		tmp = C.getByte(i);
+		if(tmp&(1<<1)) // Bit 7 being high means new articulation and new note
+			numNotes++;
+	}
 
 	return numNotes;
 }
 
 note *parseChromosome(chromosome C, int numNotes)
 {
+	bool melody = C.getByte(0)&1;
+	BPM = LOW_TEMPO + DELTA_TEMPO*(C.getByte(0)>>4);
+
 	//static note notes[numNotes];
 	static note * notes;
 
@@ -51,20 +71,44 @@ note *parseChromosome(chromosome C, int numNotes)
 		return NULL;
 
 	note tmp;
+	char tmp_byte;
 
-	int pos = 0;
+	int pos = 1;
 	int current = 0;
+	int len = C.getLength();
 
-	while(pos<C.getLength())
+	while(pos<len)
 	{
-		/* determine note info
-		if(! rest) {
-			tmp.start = 
-			tmp.end = 
-			tmp.pitch = 35 + some num 0 <--> 63
+		/* determine note info */
+		tmp_byte = C.getByte(pos);
+		if(tmp_byte&(1<<1))
+		{
+			tmp.start = (pos-1)*(TICKS_PER_QUARTER/4);
+
+			pos++;
+			while(pos<len && ((C.getByte(pos)&3)==1))
+			{
+				pos++;
+			}
+			tmp.end = (pos-1)*(TICKS_PER_QUARTER/4);
+
+			tmp.pitch = 35 + (tmp_byte>>2);
+
+			tmp.melody = melody;
+
+			if(melody)
+				tmp.velocity = MELODY_BASE_VELOCITY;
+			else
+				tmp.velocity = ACCOMP_BASE_VELOCITY;
+			if(tmp_byte&1)
+				tmp.velocity += DELTA_HARD;
+
+			notes[current++] = tmp;
 		}
-		*/
-		notes[current++] = tmp;
+		else
+		{
+			pos++;
+		}
 	}
 
 	return notes;
@@ -129,9 +173,12 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 	char chunkSize[4] = {0,0,0,6};	// size of head
 	char formatType[2] = {0,0};		// Type of midi 0/1/2
 	char numTracks[2] = {0,1};		
-	ticks_per_quarter = 120;
-	char timeDivision[2] = {(ticks_per_quarter>>8)&127, // make sure MSB is 0
-							ticks_per_quarter&255};
+	char timeDivision[2] = {(TICKS_PER_QUARTER>>8)&127, // make sure MSB is 0
+							TICKS_PER_QUARTER&255};
+	uint32_t microsecs_per_quarter = (60*1000*1000)/BPM;
+	char tempo[3] = {(microsecs_per_quarter>>16)&255,
+					 (microsecs_per_quarter>>8)&255,
+					 (microsecs_per_quarter)&255};
 
 	fwrite(chunkID, 4, 1, out);
 	fwrite(chunkSize, 1, 4, out);
@@ -143,6 +190,13 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 	uint32_t track_len = 0;
 	char trackData[4294967296]; // tracklen is 4 bytes long, buffer of max len
 	uint32_t endOfTrack = 0x00FF2F00;
+
+	// set tempo
+	trackData[track_len++] = 0xFF;
+	trackData[track_len++] = 0x51;
+	trackData[track_len++] = 0x03;
+	for(int i=0;i<3;i++)
+		trackData[track_len++] = tempo[i];
 
 	/* Conversion of notes into MIDI events */
 	for(int i=0;i<numEvents;i++)
@@ -176,8 +230,8 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 			trackData[track_len++] = 0x80; // note on
 		else
 			trackData[track_len++] = 0x90; // note off
-		trackData[track_len++] = notes[events[i].note].pitch; // note
-		trackData[track_len++] = 0x00;						  // "hardness"
+		trackData[track_len++] = notes[events[i].note].pitch;	 // note
+		trackData[track_len++] = notes[events[i].note].velocity; // hardness
 	}
 
 	char trackID[] = "MTrk";
@@ -202,14 +256,16 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 	return 0;
 }
 
-int createMidi(chromosome C, string file)
+int createMidi(chromosome C[], int numChromosomes, string file)
 {
 	note* notes;
 	event* events;
 
-	int numNotes = chromosomeNumNotes(C);
+	// Testing, only look at first note
 
-	notes = parseChromosome(C,numNotes);
+	int numNotes = chromosomeNumNotes(C[0]);
+
+	notes = parseChromosome(C[0],numNotes);
 	if(notes==NULL)
 		return 1;
 
