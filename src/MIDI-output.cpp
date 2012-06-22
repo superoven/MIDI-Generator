@@ -43,7 +43,7 @@ void parseChromosome(chromosome &C, note notes[], int numNotes)
 	BPM = LOW_TEMPO + DELTA_TEMPO*(C.getByte(0)>>4);
 
 	note tmp;
-	char tmp_byte;
+	unsigned char tmp_byte;
 
 	int pos = 1;
 	int current = 0;
@@ -65,6 +65,7 @@ void parseChromosome(chromosome &C, note notes[], int numNotes)
 			tmp.end = (pos-1)*(TICKS_PER_QUARTER/4);
 
 			tmp.pitch = 35 + (tmp_byte>>2);
+			printf("%d \t %d\n",pos,(tmp_byte>>2));
 
 			tmp.melody = melody;
 
@@ -197,7 +198,7 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 		if(events[i].state!=0)
 			trackData[track_len-1] = 0x00;
 	}
-
+	track_len+=4; // count end of track length
 	char trackID[] = "MTrk";
 	char trackSize[4] = {((track_len>>24)&255),
 						 ((track_len>>16)&255),
@@ -207,7 +208,7 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 	fwrite(trackID, 4, 1, out);
 	fwrite(trackSize, 1, 4, out);
 
-	fwrite(trackData, 1, track_len, out);
+	fwrite(trackData, 1, track_len - 4, out); //end of track isn't in trackdata
 	fwrite(&endOfTrack, 4, 1, out);
 
 	fclose(out);
