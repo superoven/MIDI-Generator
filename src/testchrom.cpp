@@ -36,10 +36,10 @@ int main()
   cout << "Printing out \'Becky\':\n";
   becky.printChromosome();
 
-  cout << "\nMutate \'Becky\':\n";
+  cout << "Mutate \'Becky\':\n";
   becky.mutate();
   becky.printChromosome();
 
-  cout << "\nAll sanity tests passed!\n";
+  cout << "\nAll sanity tests passed!\n\n";
   return 0;
 }
