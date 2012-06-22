@@ -40,7 +40,7 @@ int chromosomeNumNotes(chromosome &C)
 void parseChromosome(chromosome &C, note notes[], int numNotes)
 {
 	bool melody = C.getByte(0)&1;
-	BPM = LOW_TEMPO + DELTA_TEMPO*(C.getByte(0)>>4);
+	BPM = LOW_TEMPO + DELTA_TEMPO*((unsigned char)(C.getByte(0)>>4));
 
 	note tmp;
 	unsigned char tmp_byte;
@@ -207,7 +207,7 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 	fwrite(trackID, 4, 1, out);
 	fwrite(trackSize, 1, 4, out);
 
-	fwrite(trackData, 1, track_len - 4, out); //end of track isn't in trackdata
+	fwrite(trackData, 1, track_len - 3, out); //end of track isn't in trackdata
 	fwrite(&endOfTrack, 4, 1, out);
 
 	fclose(out);
