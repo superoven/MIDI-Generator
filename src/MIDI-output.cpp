@@ -153,6 +153,7 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 	uint32_t endOfTrack = 0x00FF2F00;
 
 	// set tempo
+	trackData[track_len++] = 0x00;
 	trackData[track_len++] = 0xFF;
 	trackData[track_len++] = 0x51;
 	trackData[track_len++] = 0x03;
@@ -188,11 +189,13 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 		}
 
 		if(events[i].state==0)
-			trackData[track_len++] = 0x80; // note on
+			trackData[track_len++] = 0x90; // note on
 		else
-			trackData[track_len++] = 0x90; // note off
+			trackData[track_len++] = 0x80; // note off
 		trackData[track_len++] = notes[events[i].note].pitch;	 // note
 		trackData[track_len++] = notes[events[i].note].velocity; // hardness
+		if(events[i].state!=0)
+			trackData[track_len-1] = 0x00;
 	}
 
 	char trackID[] = "MTrk";
