@@ -1,5 +1,5 @@
 SOURCES := genetic.cpp chromosome.cpp MIDI-output.cpp fitness.cpp
-HEADERS := $(addprefix src/, chromosome.h genetic.h)
+HEADERS := $(addprefix src/, chromosome.h genetic.h MIDI-output.h)
 
 TCHROM := testchrom.cpp chromosome.cpp
 TCHROMOBJ := $(addprefix obj/, $(TCHROM:.cpp=.o))
