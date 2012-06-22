@@ -4,5 +4,5 @@
 
 float fitnessEval(chromosome& A)
 {
-  if (A.getFitness() == -1) return 0.0f;
+  return 0.0f;
 }

@@ -4,12 +4,19 @@
 
   This initiallizes a random bit string of a defined length, and links various
   attributes to it, to make coding with the object easier.
+
+  NOTE:
+  The data is no longer a char array, it is a char vector, this is to avoid double free
+  errors caused by the compiler trying to think ahead with copy constructors. Long
+  story short, it's easy mode to just use a damn vector, and doesn't show any 
+  significant performance drops.
   -------------------------
 */
 
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <vector>
 #include "chromosome.h"
 using namespace std;
 
@@ -19,20 +26,19 @@ chromosome::chromosome(int len)
 {
   //Constructor
   //If fitness is -1, it hasn't been set by the algorithm yet.
-
-  bytes = new char[len];
+  
+  bytes.reserve(len); //Reserve the vector memory for the bytes
   length = len;
   fitness = -1;
   numchromosomes++;
-  for(int i = 0; i < len; i++) bytes[i] = (char)(rand() % GENE_POSSIBILITIES); //Generate random bytes for the chromosome
+  for(int i = 0; i < len; i++) bytes.push_back((char)(rand() % GENE_POSSIBILITIES)); //Generate random bytes for the chromosome
 }
 
 chromosome::~chromosome()
 {
   //Deconstructor
 
-  delete bytes;
-  numchromosomes--;
+  numchromosomes--; //It's terribly boring now
 }
 
 void chromosome::printChromosome()

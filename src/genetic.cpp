@@ -7,6 +7,9 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <vector>
+#include <memory>
+#include <assert.h>
 #include "chromosome.h"
 #include "genetic.h"
 using namespace std;
@@ -22,7 +25,15 @@ chromosome& roulette(chromosome* const pop);
 
 int main()
 {
-  srand(time(NULL));
+  srand(time(NULL)); //Seed the random number generator
+
+  //Create the initial population of random chromosomes
+  vector<chromosome> population;
+  population.reserve(POP_SIZE); //Reserve the memory for the chromosome vector
+  for(int i = 0; i < POP_SIZE; i++) population.push_back(chromosome(CHROMO_LENGTH)); //fill vector
+  
+  //sanity check
+  population[29].printChromosome();
 }  
 
 bool foundSolution(chromosome* const pop)
@@ -36,5 +47,3 @@ bool foundSolution(chromosome* const pop)
   }
   return found;
 }
-  
-  
