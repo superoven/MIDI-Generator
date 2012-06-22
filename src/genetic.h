@@ -12,6 +12,7 @@
 #define MUTATION_RATE 0.001
 #define POP_SIZE 100
 #define MAX_GENERATIONS 400
+#define FITNESS_THRESHOLD 400.0f
 
 float fitnessEval(chromosome& A);
 
