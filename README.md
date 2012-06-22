@@ -8,13 +8,19 @@ A genetic algorithm to create arbitrary 12 bar blues solos.
 
 `chromosome.h` is the chromosome header file.
 
+`fitness.cpp` handles the fitness evaluation of an arbitrary chromosome for the algorithm.
+
+`genetic.cpp` the genetic algorithm.
+
+`genetic.h` is the header file for the genetic algorithm.
+
 `MIDI-output.cpp` converts the solution into a MIDI file.
 
 `testchrom.cpp` is a test file to check the chromosome class functions.
 
-## Todo
+`testmidi.cpp` is a test file for the MIDI output functionality.
 
-* Settle on a consistent song representation
+## Todo
 
 * Implement the algorithm
 
