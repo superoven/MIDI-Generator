@@ -14,8 +14,6 @@ using namespace std;
 #define HIGH_TEMPO 210
 #define DELTA_TEMPO ((HIGH_TEMPO-LOW_TEMPO)/15)
 
-extern int BPM;
-
 typedef struct
 {
 	int start,end;
@@ -30,11 +28,11 @@ typedef struct
 	char state;
 } event;
 
-int chromosomeNumNotes(chromosome C);
+int chromosomeNumNotes(chromosome &C);
 
-note *parseChromosome(chromosome C, int numNotes);
+void parseChromosome(chromosome &C, note notes[], int numNotes);
 
-event *parseNotes(note notes[], int numNotes);
+void parseNotes(note notes[], event events[], int numNotes);
 
 void sortEvents(event events[], int len);
 

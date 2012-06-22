@@ -20,7 +20,9 @@
 
 using namespace std;
 
-int chromosomeNumNotes(chromosome C)
+int BPM;
+
+int chromosomeNumNotes(chromosome &C)
 {
 	int numNotes = 0;
 	char tmp;
@@ -35,17 +37,10 @@ int chromosomeNumNotes(chromosome C)
 	return numNotes;
 }
 
-note *parseChromosome(chromosome C, int numNotes)
+void parseChromosome(chromosome &C, note notes[], int numNotes)
 {
 	bool melody = C.getByte(0)&1;
 	BPM = LOW_TEMPO + DELTA_TEMPO*(C.getByte(0)>>4);
-
-	//static note notes[numNotes];
-	static note * notes;
-
-	notes = (note *) malloc(sizeof(note)*numNotes);
-	if(notes == NULL)
-		return NULL;
 
 	note tmp;
 	char tmp_byte;
@@ -87,19 +82,10 @@ note *parseChromosome(chromosome C, int numNotes)
 			pos++;
 		}
 	}
-
-	return notes;
 }
 
-event *parseNotes(note notes[], int numNotes)
+void parseNotes(note notes[], event events[], int numNotes)
 {
-	//static event events[2*numNotes];
-	static event * events;
-
-	events = (event *) malloc(sizeof(event)*2*numNotes);
-	if(events == NULL)
-		return NULL;
-
 	event tmp;
 
 	for(int i=0;i<numNotes;i++)
@@ -115,8 +101,6 @@ event *parseNotes(note notes[], int numNotes)
 
 		events[2*i+1] = tmp;
 	}
-
-	return events;
 }
 
 void sortEvents(event events[], int len)
@@ -162,10 +146,10 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 	fwrite(formatType, 1, 2, out);
 	fwrite(numTracks, 1, 2, out);
 	fwrite(timeDivision, 1, 2, out);
-
+;
 	/* Track info */
 	uint32_t track_len = 0;
-	char trackData[4294967296]; // tracklen is 4 bytes long, buffer of max len
+	char * trackData = new char[4294967296]; // tracklen is 4 bytes long, buffer of max len
 	uint32_t endOfTrack = 0x00FF2F00;
 
 	// set tempo
@@ -225,10 +209,9 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 
 	fclose(out);
 
-	/* !!!!! FREEING NOTES AND EVENTS !!!!! */
-
-	free(notes);
-	free(events);
+	delete [] trackData;
+	delete [] notes;
+	delete [] events;
 
 	return 0;
 }
@@ -242,20 +225,27 @@ int createMidi(chromosome C[], int numChromosomes, string file)
 
 	int numNotes = chromosomeNumNotes(C[0]);
 
-	notes = parseChromosome(C[0],numNotes);
-	if(notes==NULL)
-		return 1;
+	notes = new note[numNotes];
 
-	events = parseNotes(notes,numNotes);
-	if(events==NULL)
+	if(notes==NULL)
 	{
-		free(notes);
+		printf("3a\n");
 		return 1;
 	}
 
-	sortEvents(events,2*numNotes);
+	parseChromosome(C[0],notes,numNotes);
 
-	/* !!!!! outputFile FREES NOTES AND EVENTS !!!!! */
+	events = new event[2*numNotes];
+
+	if(events==NULL)
+	{
+		delete [] notes;
+		return 1;
+	}
+
+	parseNotes(notes,events,numNotes);
+
+	sortEvents(events,2*numNotes);
 
 	return outputFile(file,notes,events,2*numNotes);
 }
