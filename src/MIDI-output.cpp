@@ -65,7 +65,6 @@ void parseChromosome(chromosome &C, note notes[], int numNotes)
 			tmp.end = (pos-1)*(TICKS_PER_QUARTER/4);
 
 			tmp.pitch = 35 + (tmp_byte>>2);
-			printf("%d \t %d\n",pos,(tmp_byte>>2));
 
 			tmp.melody = melody;
 
