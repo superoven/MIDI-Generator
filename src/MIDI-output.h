@@ -4,7 +4,6 @@
 #include "chromosome.h"
 #include <string>
 
-
 using namespace std;
 
 #define TICKS_PER_QUARTER  120 // Number of delta time ticks per quarter note
@@ -15,7 +14,7 @@ using namespace std;
 #define HIGH_TEMPO 210
 #define DELTA_TEMPO ((HIGH_TEMPO-LOW_TEMPO)/15)
 
-int BPM;
+extern int BPM;
 
 typedef struct
 {
