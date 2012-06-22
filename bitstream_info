@@ -4,7 +4,7 @@ Size of chromosome will be 1 + (16 * # of bars) bytes long
 First byte in the chromosome:
 bits 1-4: tempo
 bits 5-7: type of instrument
-bit    8: melody/accompaniment
+bit    8: Melody always 1, Accompaniment always 0
 
 All following bytes:
 bits 1-6: Note
