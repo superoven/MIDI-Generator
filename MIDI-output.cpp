@@ -16,6 +16,8 @@
 
 using namespace std;
 
+uint16_t ticks_per_quarter; // Number of delta time ticks per quarter note
+
 typedef struct
 {
 	int start,end,pitch;
@@ -32,7 +34,9 @@ int chromosomeNumNotes(chromosome C)
 {
 	int numNotes = 0;
 
-	/* test for notes .... numNotes++ */
+	/* test for notes .... 
+	   make sure not to increment for rests
+		numNotes++ */
 
 	return numNotes;
 }
@@ -51,12 +55,14 @@ note *parseChromosome(chromosome C, int numNotes)
 	int pos = 0;
 	int current = 0;
 
-	while(pos<(int)(C.getLength()))
+	while(pos<C.getLength())
 	{
 		/* determine note info
-		tmp.start = 
-		tmp.end = 
-		tmp.pitch = 35 + some num 0 <--> 63
+		if(! rest) {
+			tmp.start = 
+			tmp.end = 
+			tmp.pitch = 35 + some num 0 <--> 63
+		}
 		*/
 		notes[current++] = tmp;
 	}
@@ -123,8 +129,7 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 	char chunkSize[4] = {0,0,0,6};	// size of head
 	char formatType[2] = {0,0};		// Type of midi 0/1/2
 	char numTracks[2] = {0,1};		
-	uint16_t ticks_per_quarter = 120;	// Number of delta time ticks per
-										// quarter note
+	ticks_per_quarter = 120;
 	char timeDivision[2] = {(ticks_per_quarter>>8)&127, // make sure MSB is 0
 							ticks_per_quarter&255};
 
@@ -168,11 +173,11 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 		}
 
 		if(events[i].state==0)
-			trackData[track_len++] = 0x80;
+			trackData[track_len++] = 0x80; // note on
 		else
-			trackData[track_len++] = 0x90;
-		trackData[track_len++] = notes[events[i].note].pitch;
-		trackData[track_len++] = 0x00;
+			trackData[track_len++] = 0x90; // note off
+		trackData[track_len++] = notes[events[i].note].pitch; // note
+		trackData[track_len++] = 0x00;						  // "hardness"
 	}
 
 	char trackID[] = "MTrk";
@@ -186,6 +191,8 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 
 	fwrite(trackData, 1, track_len, out);
 	fwrite(&endOfTrack, 4, 1, out);
+
+	fclose(out);
 
 	/* !!!!! FREEING NOTES AND EVENTS !!!!! */
 
@@ -204,13 +211,13 @@ int createMidi(chromosome C, string file)
 
 	notes = parseChromosome(C,numNotes);
 	if(notes==NULL)
-		return -1;
+		return 1;
 
 	events = parseNotes(notes,numNotes);
 	if(events==NULL)
 	{
 		free(notes);
-		return -1;
+		return 1;
 	}
 
 	sortEvents(events,2*numNotes);
