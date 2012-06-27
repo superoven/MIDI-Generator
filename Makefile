@@ -28,4 +28,4 @@ obj/%.o: src/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f obj/*.o $(EXECUTABLE) testchrom testmidi src/*~
+	rm -f obj/*.o $(EXECUTABLE) testchrom testmidi chromatic.mid src/*~

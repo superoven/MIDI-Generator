@@ -31,6 +31,7 @@ public:
   double getFitness();
   void setByte(int num, char A);
   void setFitness(double arg);
+  void fitnessEval();
   void mutate();					//mutate this chromosome
 
   static int getNumChromosomes() { return numchromosomes; }

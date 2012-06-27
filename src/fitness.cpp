@@ -2,7 +2,7 @@
 
 #include "chromosome.h"
 
-float fitnessEval(chromosome& A)
+void chromosome::fitnessEval()
 {
-  return 0.0f;
+  fitness = 0;
 }
