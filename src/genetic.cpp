@@ -12,6 +12,7 @@
 #include <assert.h>
 #include "chromosome.h"
 #include "genetic.h"
+#include "MIDI-output.h"
 using namespace std;
 
 int mutationCount = 0; //Number of mutations that occurred (for debugging)
@@ -46,7 +47,7 @@ int main()
 	      answerindex = i; //Save the index of the winner
 	    }
 	}
-      break; //For testing purposes only
+      break; //For testing purposes only. This is obviously not complete
     }
   population[26].printChromosome(); //For sanity checking only
 }
