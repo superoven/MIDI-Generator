@@ -8,13 +8,18 @@ Solutions are represented by a chromosome class defined in chromosome.cpp and ch
 
 Every byte is a 16th note that can be tied to past notes to make tones of different length. All chromosomes will be (1 + (16 * # of bars)) bytes long.
 
-First byte in the chromosome:
+### First byte in the chromosome:
+
 bits 0-3: tempo
+
 bits 4-6: type of instrument
+
 bit    7: Melody always 1, Accompaniment always 0
 
-All following bytes:
+### All following bytes:
+
 bits 0-5: Note
+
 bits 6-7: Articulation/Rest/Tie
 
 ## Algorithm Details
