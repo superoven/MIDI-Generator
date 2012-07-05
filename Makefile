@@ -13,7 +13,7 @@ CFLAGS := -g -Wall
 OBJECTS := $(addprefix obj/, $(SOURCEFILES:.cpp=.o))
 EXECUTABLE := genetic
 
-all: $(SOURCES) $(EXECUTABLE)
+all: $(SOURCES) $(EXECUTABLE) $(HEADERS)
 
 testchrom: $(TCHROMOBJ) $(HEADERS)
 	$(CC) $(TCHROMOBJ) -o $@
