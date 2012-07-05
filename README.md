@@ -2,11 +2,22 @@
 
 A genetic algorithm to create arbitrary 12 bar blues solos.
 
-### Implementation Details
+## Implementation Details
 
-Solutions are represented by a chromosome class defined in chromosome.cpp and chromosome.h. They are essentially a wrapper for a vector of bytes with various assignment and altering methods.The population of chromosomes that are put under the natural selection of this algorithm are represented as a vector of chromosome objects.
+Solutions are represented by a chromosome class defined in chromosome.cpp and chromosome.h. They are essentially a wrapper for a vector of bytes with various assignment and altering methods. The population of chromosomes that are put under the natural selection of this algorithm are represented as a vector of chromosome objects.
 
-### Algorithm Details
+Every byte is a 16th note that can be tied to past notes to make tones of different length. All chromosomes will be (1 + (16 * # of bars)) bytes long.
+
+First byte in the chromosome:
+bits 0-3: tempo
+bits 4-6: type of instrument
+bit    7: Melody always 1, Accompaniment always 0
+
+All following bytes:
+bits 0-5: Note
+bits 6-7: Articulation/Rest/Tie
+
+## Algorithm Details
 
 First, generate a population of random chromosomes.
 
