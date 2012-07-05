@@ -2,11 +2,11 @@
 
 A genetic algorithm to create arbitrary 12 bar blues solos.
 
-## Implementation Details
+### Implementation Details
 
 Solutions are represented by a chromosome class defined in chromosome.cpp and chromosome.h. They are essentially a wrapper for a vector of bytes with various assignment and altering methods.The population of chromosomes that are put under the natural selection of this algorithm are represented as a vector of chromosome objects.
 
-## Algorithm Details
+### Algorithm Details
 
 First, generate a population of random chromosomes.
 
