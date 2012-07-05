@@ -59,3 +59,5 @@ Then enter the main loop by which we:
 ## Todo
 
 * Implement the fitness function
+
+* Stop segfaulting when trying to output MIDI
