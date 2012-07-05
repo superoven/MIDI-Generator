@@ -19,15 +19,38 @@ int mutationCount = 0; //Number of mutations that occurred (for debugging)
 int crossoverCount = 0; //Number of crossovers that occurred (for debugging)
 int iterations = 0; //Number of iterations to find a solution
 
-void populate(vector<chromosome> const *); //Make a new generation of chromosomes
-chromosome& roulette(vector<chromosome> const *); //Stochastically determine which chromosome will move on
+double roulette(int lo, int hi) { //Generate a double precision floating point between hi and lo
+  return (((double)(rand()/((double)RAND_MAX + (double)1)) * (hi - lo)) + lo);
+}
+
+void statusReport(int iter, int mut, int cross, bool found, chromosome& answer)
+{
+  if (found)
+    {
+      cout << "Found an answer!\n";
+      cout << "Number of iterations:\t" << iter << endl;
+      cout << "Number of mutations:\t" << mut << endl;
+      cout << "Number of crossovers:\t" << cross << endl;
+      cout << "And the chromosome found was:\n";
+      answer.printChromosome();
+    }
+  else
+    {
+      cout << "No solution found. Maximum iterations exceeded.\n";
+      cout << "Number of iterations:\t" << iter << endl;
+      cout << "Number of mutations:\t" << mut << endl;
+      cout << "Number of crossovers:\t" << cross << endl;
+    }    
+}
 
 int main()
 {
   srand(time(NULL)); //Seed the random number generator
   
   vector<chromosome> population; //Create the initial population of random chromosomes
+  vector<chromosome> nextgen; //Same with the next generation
   population.reserve(POP_SIZE); //Reserve the memory for the chromosome vector
+  nextgen.reserve(POP_SIZE); // Same with the next generation
   for(int i = 0; i < POP_SIZE; i++) population.push_back(chromosome(CHROMO_LENGTH)); //fill vector
 
   bool found = false;
@@ -47,7 +70,49 @@ int main()
 	      answerindex = i; //Save the index of the winner
 	    }
 	}
-      break; //For testing purposes only. This is obviously not complete
+      if (found) break;
+      unsigned int survivors = (rand() % (POP_SIZE - POP_REMAIN_LOWBOUND)) + POP_REMAIN_LOWBOUND; //how many children will there be from the previous gen
+
+      while (nextgen.size() < survivors) //Natural Selection
+	{
+	  int winner;
+	  int loser;
+	  int comp1 = rand() % POP_SIZE; //Competitor 1
+	  int comp2 = rand() % POP_SIZE; //Competitor 2
+	  if (population[comp1].getFitness() > population[comp2].getFitness()) {winner = comp1; loser = comp2;} //who is more fit?
+	  else {winner = comp2; loser = comp1;}
+	  if (roulette(0,1) < WINNER_RATE) //Determines if the stronger one survives
+	    {
+	      nextgen.push_back(population[winner]);
+	    }
+	  else
+	    {
+	      nextgen.push_back(population[loser]);
+	    }
+	}
+
+      int numsex = rand() % survivors;
+      for (int i = 0; i < numsex; i++)
+	{
+	  int part1 = rand() % survivors; //Partner 1
+	  int part2 = rand() % survivors; //Partner 2
+	  if (roulette(0,1) < CROSSOVER_RATE) 
+	    {
+	      chromosome::crossover(nextgen[part1], nextgen[part2]);
+	      crossoverCount++;
+	    }
+	  if (roulette(0,1) < MUTATION_RATE) 
+	    {
+	      nextgen[part1].mutate();
+	      mutationCount++;
+	    }
+	}
+      
+      while (nextgen.size() < POP_SIZE) nextgen.push_back(chromosome(CHROMO_LENGTH)); //fill up the population with random chromosomes if needed
+      iterations++;
+      population = nextgen;
+      nextgen.clear();
+      if (iterations >= MAX_ITERATIONS) break;
     }
-  population[26].printChromosome(); //For sanity checking only
+  statusReport(iterations, mutationCount, crossoverCount, found, population[answerindex]);
 }
