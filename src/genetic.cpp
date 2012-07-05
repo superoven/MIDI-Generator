@@ -24,6 +24,7 @@
 */
 
 #include <iostream>
+#include <iomanip>
 #include <cstdlib>
 #include <ctime>
 #include <vector>
@@ -44,19 +45,19 @@ void statusReport(int iter, int mut, int cross, bool found, chromosome& answer) 
 {
   if (found)
     {
-      cout << "Found an answer!\n";
-      cout << "Number of iterations:\t" << iter << endl;
-      cout << "Number of mutations:\t" << mut << endl;
-      cout << "Number of crossovers:\t" << cross << endl;
-      cout << "And the chromosome found was:\n";
+      cout << "Found a solution!\n";
+      cout << "Number of iterations:\t" << setw(5) << right << iter << endl;
+      cout << "Number of mutations:\t" << setw(5) << right << mut << endl;
+      cout << "Number of crossovers:\t" << setw(5) << right << cross << endl;
+      cout << "Solution found:\n";
       answer.printChromosome();
     }
   else
     {
       cout << "No solution found. Maximum iterations exceeded.\n";
-      cout << "Number of iterations:\t" << iter << endl;
-      cout << "Number of mutations:\t" << mut << endl;
-      cout << "Number of crossovers:\t" << cross << endl;
+      cout << "Number of iterations:\t" << setw(5) << right << iter << endl;
+      cout << "Number of mutations:\t" << setw(5) << right << mut << endl;
+      cout << "Number of crossovers:\t" << setw(5) << right << cross << endl;
     }    
 }
 
