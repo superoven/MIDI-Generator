@@ -27,8 +27,6 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
-#include <memory>
-#include <assert.h>
 #include "chromosome.h"
 #include "genetic.h"
 #include "MIDI-output.h"
@@ -42,7 +40,7 @@ double roulette(int lo, int hi) { //Generate a double precision floating point b
   return (((double)(rand()/((double)RAND_MAX + (double)1)) * (hi - lo)) + lo);
 }
 
-void statusReport(int iter, int mut, int cross, bool found, chromosome& answer)
+void statusReport(int iter, int mut, int cross, bool found, chromosome& answer) //Tell us what happened
 {
   if (found)
     {
@@ -74,22 +72,19 @@ int main()
 
   bool found = false;
   int answerindex = -1; //The index in the population of the winner
-  double totalFitness = 0; //The total fitness of a given population
   
   while (!found) //Primary Loop
     {
-      for(int i = 0; i < POP_SIZE; i++)
+      for(int i = 0; i < POP_SIZE; i++) //Check all the fitness ratings
 	{
 	  population[i].fitnessEval(); //Determine the fitness of each chromosome
-	  double checkval = population[i].getFitness(); //Save this variable so we don't have to dereference twice
-      	  totalFitness += checkval; //Keep track of what the total fitness is
-	  if (checkval > FITNESS_THRESHOLD) //Did we find an answer?
+	  if (population[i].getFitness() > FITNESS_THRESHOLD) //Did we find an answer?
 	    {
 	      found = true;
 	      answerindex = i; //Save the index of the winner
 	    }
 	}
-      if (found) break;
+      if (found) break; //If we have an answer, stop looking for one
       unsigned int survivors = (rand() % (POP_SIZE - POP_REMAIN_LOWBOUND)) + POP_REMAIN_LOWBOUND; //how many children will there be from the previous gen
 
       while (nextgen.size() < survivors) //Natural Selection
@@ -110,17 +105,17 @@ int main()
 	    }
 	}
 
-      int numsex = rand() % survivors;
+      int numsex = rand() % survivors; //How many times will we attempt to crossover and mutate?
       for (int i = 0; i < numsex; i++)
 	{
 	  int part1 = rand() % survivors; //Partner 1
 	  int part2 = rand() % survivors; //Partner 2
-	  if (roulette(0,1) < CROSSOVER_RATE) 
+	  if (roulette(0,1) < CROSSOVER_RATE) //Attempt crossover
 	    {
 	      chromosome::crossover(nextgen[part1], nextgen[part2]);
 	      crossoverCount++;
 	    }
-	  if (roulette(0,1) < MUTATION_RATE) 
+	  if (roulette(0,1) < MUTATION_RATE) //Attempt mutation
 	    {
 	      nextgen[part1].mutate();
 	      mutationCount++;
@@ -129,9 +124,9 @@ int main()
       
       while (nextgen.size() < POP_SIZE) nextgen.push_back(chromosome(CHROMO_LENGTH)); //fill up the population with random chromosomes if needed
       iterations++;
-      population = nextgen;
-      nextgen.clear();
-      if (iterations >= MAX_ITERATIONS) break;
+      population = nextgen; //reassign so the algorithm is consistent
+      nextgen.clear(); //clear the memory that we don't need
+      if (iterations >= MAX_ITERATIONS) break; //Leave if the maximum number of iterations is exceeded
     }
-  statusReport(iterations, mutationCount, crossoverCount, found, population[answerindex]);
+  statusReport(iterations, mutationCount, crossoverCount, found, population[answerindex]); //Tell us what happened
 }
