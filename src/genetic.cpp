@@ -68,10 +68,10 @@ int main()
   vector<chromosome> population; //Create the initial population of random chromosomes
   vector<chromosome> nextgen; //Same with the next generation
   population.reserve(POP_SIZE); //Reserve the memory for the chromosome vector
-  nextgen.reserve(POP_SIZE); // Same with the next generation
+  nextgen.reserve(POP_SIZE); //Same with the next generation
   for(int i = 0; i < POP_SIZE; i++) population.push_back(chromosome(CHROMO_LENGTH)); //fill vector
 
-  bool found = false;
+  bool found = false; //True if we found an answer
   int answerindex = -1; //The index in the population of the winner
   
   while (!found) //Primary Loop
@@ -87,6 +87,8 @@ int main()
 	}
       if (found) break; //If we have an answer, stop looking for one
       unsigned int survivors = (rand() % (POP_SIZE - POP_REMAIN_LOWBOUND)) + POP_REMAIN_LOWBOUND; //how many children will there be from the previous gen
+      //Number will be between the lowbound and population size, not including the population size. 
+      //Therefore, there will always be at least one new random member.
 
       while (nextgen.size() < survivors) //Natural Selection
 	{
@@ -123,7 +125,7 @@ int main()
 	    }
 	}
       
-      while (nextgen.size() < POP_SIZE) nextgen.push_back(chromosome(CHROMO_LENGTH)); //fill up the population with random chromosomes if needed
+      while (nextgen.size() < POP_SIZE) nextgen.push_back(chromosome(CHROMO_LENGTH)); //fill up the population with random chromosomes as needed
       iterations++;
       population = nextgen; //reassign so the algorithm is consistent
       nextgen.clear(); //clear the memory that we don't need

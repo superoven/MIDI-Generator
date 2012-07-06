@@ -26,7 +26,6 @@ chromosome::chromosome(int len)
 {
   //Constructor
   //If fitness is -1, it hasn't been set by the algorithm yet.
-  
   bytes.reserve(len); //Reserve the vector memory for the bytes
   length = len;
   fitness = -1;
@@ -37,8 +36,7 @@ chromosome::chromosome(int len)
 chromosome::~chromosome()
 {
   //Deconstructor
-
-  numchromosomes--; //It's terribly boring now
+  numchromosomes--; //Yeah that's it. The compiler will handle the rest.
 }
 
 void chromosome::printChromosome()
@@ -64,9 +62,9 @@ long chromosome::getLength() { return length; } //Get the length of the chromoso
 
 double chromosome::getFitness() { return fitness; } //Get the fitness of the chromosome
 
-void chromosome::setByte(int num, char A) { bytes[num] = A; } //Set the byte of the chromosome. Please don't use this ever.
+void chromosome::setByte(int num, char A) { bytes[num] = A; } //Set the byte of the chromosome.
   
-void chromosome::setFitness(double arg) { fitness = ((arg > 0) ? arg : 0); } //Set the fitness of the chromosome, defaults to 0
+//void chromosome::setFitness(double arg) { fitness = ((arg > 0) ? arg : 0); } //Set the fitness of the chromosome, defaults to 0
 
 void chromosome::mutate()
 {

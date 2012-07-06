@@ -7,9 +7,9 @@
 #ifndef CHROMOSOME_H
 #define CHROMOSOME_H
 
-#define GENE_LENGTH 8
+#define GENE_LENGTH 8			//8 bits in a byte
 #define GENE_POSSIBILITIES 256 		//must be = 2^GENE_LENGTH 
-#define PRINT_BYTES_PER_LINE 16
+#define PRINT_BYTES_PER_LINE 16		//when printing, how many bytes are in a line
 
 #include <vector>
 
