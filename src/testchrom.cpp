@@ -28,10 +28,8 @@ int main()
   assert(jim.getFitness() == -1);
 
   chromosome becky(32);
-  becky.setFitness(2.56);
   assert(chromosome::getNumChromosomes() == 3);
   assert(becky.getLength() == 32);
-  assert(becky.getFitness() == 2.56);
   
   cout << "Printing out \'Becky\':\n";
   becky.printChromosome();

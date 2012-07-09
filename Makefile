@@ -17,6 +17,7 @@ all: $(SOURCES) $(EXECUTABLE) $(HEADERS)
 
 testchrom: $(TCHROMOBJ) $(HEADERS)
 	$(CC) $(TCHROMOBJ) -o $@
+	./$@
 
 testmidi: $(TMIDIOBJ) $(HEADERS)
 	$(CC) $(TMIDIOBJ) -o $@
