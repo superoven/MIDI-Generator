@@ -27,6 +27,7 @@ testmidi: $(TMIDIOBJ) $(HEADERS)
 
 $(EXECUTABLE): $(OBJECTS) $(HEADERS)
 	$(CC) $(OBJECTS) -o $@
+	./$@
 
 obj/%.o: src/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
