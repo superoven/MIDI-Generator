@@ -20,6 +20,10 @@ testchrom: $(TCHROMOBJ) $(HEADERS)
 
 testmidi: $(TMIDIOBJ) $(HEADERS)
 	$(CC) $(TMIDIOBJ) -o $@
+	./$@
+	./bin/timidity chromatic.mid
+	./bin/timidity notes.mid
+	./bin/timidity accents.mid
 
 $(EXECUTABLE): $(OBJECTS) $(HEADERS)
 	$(CC) $(OBJECTS) -o $@
@@ -28,4 +32,4 @@ obj/%.o: src/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f obj/*.o $(EXECUTABLE) testchrom testmidi chromatic.mid src/*~
+	rm -f obj/*.o $(EXECUTABLE) testchrom testmidi chromatic.mid accents.mid notes.mid src/*~

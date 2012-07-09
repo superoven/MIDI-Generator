@@ -210,11 +210,12 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 	fwrite(trackData, 1, track_len - 3, out); //end of track isn't in trackdata
 	fwrite(&endOfTrack, 4, 1, out);
 
-	fclose(out);
+	//fclose(out);//Hey Dono, so by commenting this out, it stopped segfaulting. I guess at some point later it calls these things or something? but in any case, it doesn't crash so thats nice. this really shouldn't be a final fix though as I'm fairly sure this creates a memory leak. -Taylor
+	
 
-	delete [] trackData;
-	delete [] notes;
-	delete [] events;
+	//delete trackData;
+	//delete notes;
+	//delete events;
 
 	return 0;
 }
