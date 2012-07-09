@@ -17,8 +17,8 @@ int main()
 	for(note=0;note<64;note++)
 		chromatic.setByte(note+1,(note<<2)+2);
 
-	if(createMidi(&chromatic,1,"chromatic.mid")==0)
-		cout<<"Saved to chromatic.midi\n";
+	if(createMidi(&chromatic,1,"midi/chromatic.mid")==0)
+		cout<<"Saved to midi/chromatic.midi\n";
 	else
 		cout<<"An error occurred with chromatic\n";
 
@@ -37,7 +37,7 @@ int main()
 		note_len*=2;
 	}
 
-	if(createMidi(&notes,1,"notes.mid")==0)
+	if(createMidi(&notes,1,"midi/notes.mid")==0)
 		cout<<"Saved to notes.midi\n";
 	else
 		cout<<"An error occurred with notes\n";
@@ -54,7 +54,7 @@ int main()
 		accents.setByte(i*4 + 4,1);
 	}
 
-	if(createMidi(&accents,1,"accents.mid")==0)
+	if(createMidi(&accents,1,"midi/accents.mid")==0)
 		cout<<"Saved to accents.midi\n";
 	else
 		cout<<"An error occurred with accents\n";
