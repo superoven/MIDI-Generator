@@ -9,3 +9,7 @@ bit    7: Melody always 1, Accompaniment always 0
 All following bytes:
 bits 0-5: Note
 bits 6-7: Articulation/Rest/Tie
+	  00 - rest
+	  01 - tie
+	  10 - normal
+	  11 - hard
