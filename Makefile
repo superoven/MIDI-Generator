@@ -3,6 +3,7 @@ SOURCES := $(addprefix src/, $(SOURCEFILES))
 HEADERS := $(addprefix src/, chromosome.h genetic.h MIDI-output.h)
 TESTMIDI := $(addprefix midi/, chromatic.mid notes.mid accents.mid)
 TESTEXE := testchrom testmidi
+PLAYBACK := ./bin/timidity		#Link to ubuntu midi playback binary, change this if you compiled it yourself
 
 TCHROM := testchrom.cpp chromosome.cpp
 TCHROMOBJ := $(addprefix obj/, $(TCHROM:.cpp=.o))
@@ -24,13 +25,16 @@ testchrom: $(TCHROMOBJ) $(HEADERS)
 testmidi: $(TMIDIOBJ) $(HEADERS)
 	$(CC) $(TMIDIOBJ) -o $@
 	./$@
-	./bin/timidity $(TESTMIDI)
+	$(PLAYBACK) $(TESTMIDI)
 
 $(EXECUTABLE): $(OBJECTS) $(HEADERS)
 	$(CC) $(OBJECTS) -o $@
 	./$@
 
-obj/%.o: src/%.cpp
+obj/%.o: src/%.cpp src/%.h	#Force recompile if associated header changes
+	$(CC) $(CFLAGS) -c $< -o $@
+
+obj/%.o: src/%.cpp		#Overloaded object compiler for .cpp files without headers
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
