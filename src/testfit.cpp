@@ -6,6 +6,8 @@ using namespace std;
 
 int main()
 {
+	srand(time(NULL));
+
 	cout<<"Creating accompaniment chromosomes\n";
 
 	createAccompaniment();
