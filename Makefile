@@ -45,4 +45,4 @@ obj/%.o: src/%.cpp		#Overloaded object compiler for .cpp files without headers
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJECTS) $(TCHROMOBJ) $(TMIDIOBJ) $(EXECUTABLE) $(TESTMIDI) $(TESTEXE) src/*~
+	rm -f $(OBJECTS) $(TCHROMOBJ) $(TMIDIOBJ) $(TFITOBJ) $(EXECUTABLE) $(TESTMIDI) $(TESTEXE) src/*~
