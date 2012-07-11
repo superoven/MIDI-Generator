@@ -1,4 +1,6 @@
 Every note will be a 16th note that can be tied to the past note for different lengths
+To add triplet support, 3 16th notes starting on a down beat with a 16th note rest
+following it will be considered 3 triplets.
 Size of chromosome will be 1 + (16 * # of bars) bytes long
 
 First byte in the chromosome:

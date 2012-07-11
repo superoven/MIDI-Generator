@@ -59,6 +59,58 @@ int main()
 	else
 		cout<<"An error occurred with accents\n";
 
+	cout<<"Tonguing Drill\n";
+
+	chromosome tonguing(80+1);
+	tonguing.setByte(0,1);
+	for(int i=0;i<4;i++)
+	{
+		tonguing.setByte(i*4 + 1,3);
+		tonguing.setByte(i*4 + 2,1);
+		tonguing.setByte(i*4 + 3,1);
+		tonguing.setByte(i*4 + 4,1);
+	}
+
+	for(int i=4;i<8;i++)
+	{
+		tonguing.setByte(i*4 + 1,3);
+		tonguing.setByte(i*4 + 2,1);
+		tonguing.setByte(i*4 + 3,2);
+		tonguing.setByte(i*4 + 4,1);
+	}
+
+	for(int i=8;i<12;i++)
+	{
+		tonguing.setByte(i*4 + 1,3);
+		tonguing.setByte(i*4 + 2,2);
+		tonguing.setByte(i*4 + 3,2);
+		tonguing.setByte(i*4 + 4,0);
+	}
+
+	for(int i=12;i<16;i++)
+	{
+		tonguing.setByte(i*4 + 1,3);
+		tonguing.setByte(i*4 + 2,2);
+		tonguing.setByte(i*4 + 3,2);
+		tonguing.setByte(i*4 + 4,2);
+	}
+
+	for(int i=16;i<20;i++)
+	{
+		if((i%4)==0)
+			tonguing.setByte(i*4 + 1,3);
+		else
+			tonguing.setByte(i*4 + 1, 1);
+		tonguing.setByte(i*4 + 2,1);
+		tonguing.setByte(i*4 + 3,1);
+		tonguing.setByte(i*4 + 4,1);
+	}
+
+	if(createMidi(&tonguing,1,"midi/tonguing.mid")==0)
+		cout<<"Saved to tonguing.midi\n";
+	else
+		cout<<"An error occurred with tonguing\n";
+
 	cout<<"Testing complete, check midi files to confirm accuracy\n";
 
 	return 0;

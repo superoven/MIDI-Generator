@@ -49,12 +49,23 @@ void parseChromosome(chromosome &C, note notes[], int numNotes)
 	int current = 0;
 	int len = C.getLength();
 
+	bool triplet = false;
+	uint32_t triplet_start = 0;
+
 	while(pos<len)
 	{
+		if((pos&3)==0)
+			triplet = false;
 		/* determine note info */
 		tmp_byte = C.getByte(pos);
 		if(tmp_byte&(1<<1))
 		{
+			if(((pos&3)==1)&&(C.getByte(pos+2)&(1<<1))&&((C.getByte(pos+3)&3)==0))
+			{
+				triplet = true;
+				triplet_start = pos;
+			}
+			
 			tmp.start = (pos-1)*(TICKS_PER_QUARTER/4);
 
 			pos++;
@@ -62,7 +73,11 @@ void parseChromosome(chromosome &C, note notes[], int numNotes)
 			{
 				pos++;
 			}
-			tmp.end = (pos-1)*(TICKS_PER_QUARTER/4);
+
+			if(triplet)
+				tmp.end = (triplet_start-1)*(TICKS_PER_QUARTER/4) + (pos-triplet_start)*(TICKS_PER_QUARTER/3);
+			else
+				tmp.end = (pos-1)*(TICKS_PER_QUARTER/4);
 
 			tmp.pitch = 35 + (tmp_byte>>2);
 
