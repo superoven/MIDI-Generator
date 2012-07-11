@@ -165,7 +165,7 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 	/* Track info */
 	uint32_t track_len = 0;
 	char * trackData = new char[4294967296]; // tracklen is 4 bytes long, buffer of max len
-	uint32_t endOfTrack = 0x00FF2F00;
+	char endOfTrack[4] = {0x00,0xFF,0x2F,0x00};
 
 	// set tempo
 	trackData[track_len++] = 0x00;
@@ -178,23 +178,28 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 	/* Conversion of notes into MIDI events */
 	for(int i=0;i<numEvents;i++)
 	{
-		/* 	delta time code, variable length MSB is 0 if more data follows,
-			1 if end of data
+		/* 	delta time code, variable length MSB is 1 if more data follows,
+			0 if end of data
 		*/
 
 		if(i==0)
 			trackData[track_len++] = 0x00;
 		else
 		{
-			int dtime_len;
+			int dtime_len=4;
 			uint32_t diff_time = events[i].time - events[i-1].time;
-			char dtime[4] = {(diff_time>>21)&127,
+			unsigned char dtime[4] = {(diff_time>>21)&127,
 							 (diff_time>>14)&127,
 							 (diff_time>>7)&127,
 							  diff_time&127};
 			for(int i=3;i>=0;i--)
+			{
 				if(dtime[i]==0)
-					dtime_len = 4-i;
+				{
+					dtime_len = max(1,3-i);
+					i=-1;
+				}
+			}
 			for(int i=4-dtime_len;i<4;i++)
 			{
 				if(i<3)
@@ -212,7 +217,8 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 		if(events[i].state!=0)
 			trackData[track_len-1] = 0x00;
 	}
-	track_len+=4; // count end of track length
+	track_len+=4; // count track header
+	track_len--;  // track_len is 1 too large for some reason
 	char trackID[] = "MTrk";
 	char trackSize[4] = {((track_len>>24)&255),
 						 ((track_len>>16)&255),
@@ -222,8 +228,8 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 	fwrite(trackID, 4, 1, out);
 	fwrite(trackSize, 1, 4, out);
 
-	fwrite(trackData, 1, track_len - 3, out); //end of track isn't in trackdata
-	fwrite(&endOfTrack, 4, 1, out);
+	fwrite(trackData, 1, track_len - 4, out); //track header already written
+	fwrite(endOfTrack, 1, 4, out);
 
 	//fclose(out);//Hey Dono, so by commenting this out, it stopped segfaulting. I guess at some point later it calls these things or something? but in any case, it doesn't crash so thats nice. this really shouldn't be a final fix though as I'm fairly sure this creates a memory leak. -Taylor
 	
