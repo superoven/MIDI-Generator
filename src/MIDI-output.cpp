@@ -36,7 +36,7 @@
   };
   typedef struct note note_t;
 
-  The struct didn't have a name at all, and this nameless struct was initialized with a pointer to a member called "note", which doesn't make much sense.
+  The struct type as it was defined wasn't being nice about casting the malloc pointer, so I did it the way I'm familiar with.
   I typedef'd the name "note_t" to be short hand for a pointer to a "struct note".
 
   ---New Usage:
@@ -220,7 +220,7 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 	char tempo[3] = {(microsecs_per_quarter>>16)&255,
 					 (microsecs_per_quarter>>8)&255,
 					 (microsecs_per_quarter)&255};
-
+	;
 	fwrite(chunkID, 4, 1, out);
 	fwrite(chunkSize, 1, 4, out);
 	fwrite(formatType, 1, 2, out);
