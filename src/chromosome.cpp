@@ -95,6 +95,6 @@ void chromosome::crossover(chromosome& a, chromosome& b) 	//combine chromosome a
   a.fitness = -1; //These are totally new, so if they had a fitness, they are back to not having one.
   b.fitness = -1;
 
-  delete buffer1; //Clean up allocated memory
-  delete buffer2;
+  delete [] buffer1; //Clean up allocated memory
+  delete [] buffer2;
 }
