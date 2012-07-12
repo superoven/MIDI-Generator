@@ -14,19 +14,23 @@ using namespace std;
 #define HIGH_TEMPO 210
 #define DELTA_TEMPO ((HIGH_TEMPO-LOW_TEMPO)/15)
 
-typedef struct
+struct note
 {
 	int start,end;
 	char pitch,velocity;
 	bool melody;
-} note;
+};
 
-typedef struct
+typedef struct note note_t;
+
+struct event
 {
 	int time;
 	int note;
 	char state;
-} event;
+};
+
+typedef struct event event_t;
 
 int chromosomeNumNotes(chromosome &C);
 

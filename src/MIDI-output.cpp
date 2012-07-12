@@ -10,6 +10,71 @@
 	outputed to the MIDI file
 */
 
+/*
+  ATTN Donovan:
+
+  I fixed your segfault problem cause it was really bothering me. I went through with a memory checker and there are no longer any memory leaks or segfaults.
+  You are welcome. Sorry if it seems like I'm intruding on your domain, but it was really pissing me off.
+  I changed a couple of things:
+
+  ---Definition of the structs:
+
+  They were:
+
+  typedef struct
+  {
+  asdf
+  asdf
+  } note;
+
+  They are now:
+
+  struct note
+  {
+  asdf
+  asdf
+  };
+  typedef struct note note_t;
+
+  The struct didn't have a name at all, and this nameless struct was initialized with a pointer to a member called "note", which doesn't make much sense.
+  I typedef'd the name "note_t" to be short hand for a pointer to a "struct note".
+
+  ---New Usage:
+
+  According to a memory checker, the new wasn't allocating anything at all. I don't know why and just changed all the news and deletes to cooresponding
+  mallocs and frees.
+
+  Anyway, it works, here is the output from valgrind:
+
+  valgrind ./testmidi
+  ==2819== Memcheck, a memory error detector
+  ==2819== Copyright (C) 2002-2011, and GNU GPL'd, by Julian Seward et al.
+  ==2819== Using Valgrind-3.7.0 and LibVEX; rerun with -h for copyright info
+  ==2819== Command: ./testmidi
+  ==2819== 
+  Creating 16th note chromatic chromosome
+  Saved to midi/chromatic.midi
+  Creating one of every type of note
+  Saved to notes.midi
+  Quarter notes, fastest tempo, alternating accents
+  Saved to accents.midi
+  Tonguing Drill
+  Saved to tonguing.midi
+  Testing complete, check midi files to confirm accuracy
+  ==2819== 
+  ==2819== HEAP SUMMARY:
+  ==2819==     in use at exit: 0 bytes in 0 blocks
+  ==2819==   total heap usage: 24 allocs, 24 frees, 22,737 bytes allocated
+  ==2819== 
+  ==2819== All heap blocks were freed -- no leaks are possible
+  ==2819== 
+  ==2819== For counts of detected and suppressed errors, rerun with: -v
+  ==2819== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 17 from 6)
+
+  Also, the size of your trackSize allocation is too big, Its now 2^30, you cannot make it 2^31 or more because the compiler will interpret the
+  constant as signed otherwise.
+*/
+
 #include "MIDI-output.h"
 #include "chromosome.h"
 #include <string>
@@ -161,10 +226,10 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 	fwrite(formatType, 1, 2, out);
 	fwrite(numTracks, 1, 2, out);
 	fwrite(timeDivision, 1, 2, out);
-;
+
 	/* Track info */
 	uint32_t track_len = 0;
-	char * trackData = new char[4294967296]; // tracklen is 4 bytes long, buffer of max len
+	char * trackData = (char *) malloc(1073741824); // tracklen is 4 bytes long, buffer of max len
 	char endOfTrack[4] = {0x00,0xFF,0x2F,0x00};
 
 	// set tempo
@@ -230,26 +295,25 @@ int outputFile(string file, note notes[], event events[], int numEvents)
 	fwrite(trackData, 1, track_len, out);
 	fwrite(endOfTrack, 1, 4, out);
 
-	//fclose(out);//Hey Dono, so by commenting this out, it stopped segfaulting. I guess at some point later it calls these things or something? but in any case, it doesn't crash so thats nice. this really shouldn't be a final fix though as I'm fairly sure this creates a memory leak. -Taylor
-	
+	fclose(out);	
 
-	//delete trackData;
-	//delete notes;
-	//delete events;
+	free(trackData);
+	free(notes);
+	free(events);
 
 	return 0;
 }
 
 int createMidi(chromosome C[], int numChromosomes, string file)
 {
-	note* notes;
-	event* events;
+	note_t* notes;
+	event_t* events;
 
 	// Testing, only look at first note
 
 	int numNotes = chromosomeNumNotes(C[0]);
 
-	notes = new note[numNotes];
+	notes = (note_t*) malloc(sizeof(note_t) * numNotes);
 
 	if(notes==NULL)
 	{
@@ -259,7 +323,7 @@ int createMidi(chromosome C[], int numChromosomes, string file)
 
 	parseChromosome(C[0],notes,numNotes);
 
-	events = new event[2*numNotes];
+	events = (event_t*) malloc(sizeof(event_t) * 2 * numNotes);
 
 	if(events==NULL)
 	{
