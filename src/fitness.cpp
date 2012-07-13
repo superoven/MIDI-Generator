@@ -30,9 +30,13 @@
 */
 
 #include "header/chromosome.h"
+#include "header/fitness.h"
+#include <stdio.h>
 
 void chromosome::fitnessEval()
 {
+	if(!accompanimentSet)
+		createAccompaniment();
 	fitness = 0;
 	if(length<=0)
 		return;
@@ -50,4 +54,6 @@ void chromosome::fitnessEval()
 void createAccompaniment()
 {
 	// create the accompaniment chromosomes
+	printf("Creating accompaniment\n");
+	accompanimentSet = true;
 }
