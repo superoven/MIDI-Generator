@@ -33,13 +33,10 @@
 #include "header/fitness.h"
 #include <stdio.h>
 
-extern chromosome* accompaniments[TOTAL_ACCOMP];
-extern bool accompanimentSet = false;
-
 void chromosome::fitnessEval()
 {
-	if(!accompanimentSet)
-		createAccompaniment();
+	/*if(!accompanimentSet)
+		createAccompaniment();*/
 	fitness = 0;
 	if(length<=0)
 		return;
