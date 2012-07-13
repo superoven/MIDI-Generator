@@ -11,7 +11,7 @@ using namespace std;
 
 extern chromosome* accompaniments[TOTAL_ACCOMP];
 
-bool accompanimentSet = false;
+extern bool accompanimentSet = false;
 
 void createAccompaniment();
 
