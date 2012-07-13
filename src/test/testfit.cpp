@@ -8,10 +8,6 @@ int main()
 {
 	srand(time(NULL));
 
-	cout<<"Creating accompaniment chromosomes\n";
-
-	createAccompaniment();
-
 	cout<<"Creating random chromosome\n";
 
 	chromosome melody(4+1);
