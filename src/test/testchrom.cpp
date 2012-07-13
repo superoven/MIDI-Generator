@@ -2,7 +2,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <assert.h>
-#include "chromosome.h"
+#include "../header/chromosome.h"
 using namespace std;
 
 int main()

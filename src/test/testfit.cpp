@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstdlib>
-#include "chromosome.h"
-#include "fitness.h"
+#include "../header/chromosome.h"
+#include "../header/fitness.h"
 using namespace std;
 
 int main()

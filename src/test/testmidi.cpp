@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstdlib>
-#include "MIDI-output.h"
-#include "chromosome.h"
+#include "../header/MIDI-output.h"
+#include "../header/chromosome.h"
 using namespace std;
 
 int main()
@@ -38,7 +38,7 @@ int main()
 	}
 
 	if(createMidi(&notes,1,"midi/notes.mid")==0)
-		cout<<"Saved to notes.midi\n";
+		cout<<"Saved to midi/notes.midi\n";
 	else
 		cout<<"An error occurred with notes\n";
 
@@ -55,7 +55,7 @@ int main()
 	}
 
 	if(createMidi(&accents,1,"midi/accents.mid")==0)
-		cout<<"Saved to accents.midi\n";
+		cout<<"Saved to midi/accents.midi\n";
 	else
 		cout<<"An error occurred with accents\n";
 
@@ -107,7 +107,7 @@ int main()
 	}
 
 	if(createMidi(&tonguing,1,"midi/tonguing.mid")==0)
-		cout<<"Saved to tonguing.midi\n";
+		cout<<"Saved to midi/tonguing.midi\n";
 	else
 		cout<<"An error occurred with tonguing\n";
 

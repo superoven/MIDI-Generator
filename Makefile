@@ -1,6 +1,6 @@
 SOURCEFILES := genetic.cpp chromosome.cpp MIDI-output.cpp fitness.cpp
 SOURCES := $(addprefix src/, $(SOURCEFILES))
-HEADERS := $(addprefix src/, chromosome.h genetic.h MIDI-output.h fitness.h)
+HEADERS := $(addprefix src/header/, chromosome.h genetic.h MIDI-output.h fitness.h)
 TESTMIDI := $(addprefix midi/, chromatic.mid notes.mid accents.mid tonguing.mid)
 TESTEXE := testchrom testmidi testfit
 PLAYBACK := ./bin/timidity		#Link to ubuntu midi playback binary, change this if you compiled it yourself
@@ -38,11 +38,14 @@ $(EXECUTABLE): $(OBJECTS) $(HEADERS)
 	$(CC) $(OBJECTS) -o $@
 	./$@
 
-obj/%.o: src/%.cpp src/%.h	#Force recompile if associated header changes
+obj/%.o: src/%.cpp src/header/%.h	#Force recompile if associated header changes
 	$(CC) $(CFLAGS) -c $< -o $@
 
 obj/%.o: src/%.cpp		#Overloaded object compiler for .cpp files without headers
 	$(CC) $(CFLAGS) -c $< -o $@
 
+obj/%.o: src/test/%.cpp		#Overloaded object compiler for test files
+	$(CC) $(CFLAGS) -c $< -o $@
+
 clean:
-	rm -f $(OBJECTS) $(TCHROMOBJ) $(TMIDIOBJ) $(TFITOBJ) $(EXECUTABLE) $(TESTMIDI) $(TESTEXE) src/*~
+	rm -f $(OBJECTS) $(TCHROMOBJ) $(TMIDIOBJ) $(TFITOBJ) $(EXECUTABLE) $(TESTMIDI) $(TESTEXE) src/*~ src/test/*~ src/header/*~

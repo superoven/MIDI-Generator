@@ -29,7 +29,7 @@
   -Taylor
 */
 
-#include "chromosome.h"
+#include "header/chromosome.h"
 
 void chromosome::fitnessEval()
 {

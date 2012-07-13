@@ -17,7 +17,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
-#include "chromosome.h"
+#include "header/chromosome.h"
 using namespace std;
 
 int chromosome::numchromosomes = 0; //Static data needs to be declared like this or it throws a shit fit.

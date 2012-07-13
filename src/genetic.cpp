@@ -29,9 +29,9 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
-#include "chromosome.h"
-#include "genetic.h"
-#include "MIDI-output.h"
+#include "header/chromosome.h"
+#include "header/genetic.h"
+#include "header/MIDI-output.h"
 using namespace std;
 
 int mutationCount = 0; //Number of mutations that occurred (for debugging)

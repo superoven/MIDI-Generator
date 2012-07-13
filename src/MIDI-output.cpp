@@ -75,8 +75,8 @@
   constant as signed otherwise.
 */
 
-#include "MIDI-output.h"
-#include "chromosome.h"
+#include "header/MIDI-output.h"
+#include "header/chromosome.h"
 #include <string>
 #include <cstdio>
 #include <cstdlib>
