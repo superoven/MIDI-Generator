@@ -55,5 +55,5 @@ void createAccompaniment()
 {
 	// create the accompaniment chromosomes
 	printf("Creating accompaniment\n");
-	accompanimentSet = true;
+	//accompanimentSet = true;
 }
