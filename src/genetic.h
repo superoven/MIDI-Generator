@@ -16,6 +16,4 @@
 #define MAX_ITERATIONS 1000
 #define FITNESS_THRESHOLD 400.0f
 
-float fitnessEval(chromosome& A);
-
 #endif
