@@ -9,7 +9,7 @@
 
 using namespace std;
 
-chromosome* accompaniments[TOTAL_ACCOMP];
+extern chromosome* accompaniments[TOTAL_ACCOMP];
 
 bool accompanimentSet = false;
 
