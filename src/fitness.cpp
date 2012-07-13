@@ -33,6 +33,9 @@
 #include "header/fitness.h"
 #include <stdio.h>
 
+chromosome* accompaniments[TOTAL_ACCOMP];
+bool accompanimentSet = false;
+
 void chromosome::fitnessEval()
 {
 	if(!accompanimentSet)
