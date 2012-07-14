@@ -41,10 +41,27 @@ void chromosome::fitnessEval()
 	if(length<=0)
 		return;
 
-	// If the chromosome has any length to it, set it to melody and evaluate
-	// it's fitness
+        // Points awarded for key tones (Scale 0 - 500)
+        // Key Points = (50 * note points^2)/(# of bars * 4) 
+        // If the music isn't like 90% in key, I want it to be fucked.
 
-	// fitness eval code
+        // Points awarded for chord tones 1 - 3 - 5 - 7 (Scale 0 - 300)
+        // Chord Points  = [-10/(# of bars)]*|note points-[(# of bars) x 30]|+300
+        // This puts the max points at 75% chord tones, with points decreasing linearly
+        // for higher or lower values.
+
+        // These formulas are carefully derived but certainly inaccurate.
+
+        // "Note points" given by:
+        //                      1       e       and     a
+        //      ----------------------------------------------
+        // In Key/Chord         5       1       3       1       
+        // Rest                 2       1       1       1
+        // Deviating            0       0       0       0
+        // This allows for an easy max of 10 points per beat.
+
+        // I need at least the last 200 points for random shit. I'll cut into chord tones if necessary.
+        // Basically I'm going to use this for punishing stuff that's static, bloopy, etc.
 
 	fitness = 0;
 
