@@ -42,7 +42,7 @@ void chromosome::fitnessEval()
 		return;
 
         // Points awarded for key tones (Scale 0 - 500)
-        // Key Points = (50 * note points^2)/(# of bars * 4) 
+        // Key Points = 500 * [(note points)/(# of bars * 40)]^2
         // If the music isn't like 90% in key, I want it to be fucked.
 
         // Points awarded for chord tones 1 - 3 - 5 - 7 (Scale 0 - 300)
