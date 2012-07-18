@@ -20,27 +20,43 @@ void chromosome::fitnessEval()
 	// Evaluated on Scale 0 - 1000
 
         // Points awarded for key tones (Scale 0 - 500)
-        // Key Points = 500 * [(note points)/(# of bars * 40)]^2
+        // Key Points = 500 * [(note points)/(# of bars * 40)]^n
         // If the music isn't like 90% in key, I want it to be fucked.
+        // n = 2; raising n may be used in the future to more stringently enforce key.
 
         // Points awarded for chord tones 1 - 3 - 5 - 7 (Scale 0 - 300)
-        // Chord Points  = [-40/(# of bars)]*|note points-[(# of bars) * 7.5]|+300
-        // This puts the max points at 75% chord tones, with points decreasing linearly
-        // for higher or lower values.
+        // Chord Points  = [-300/(# of bars * m)]*|note points-[(# of bars) * m]|+300
+        // m = 7.5; This puts the max points at 75% chord tones, with points decreasing linearly
+        // for higher or lower values. Changing m adjusts the optimal number of points without 
+        // altering the solution note points = 0.
+        
+        // Points awarded for rhythmic not-shittiness (Scale 0 - 200)
+	// Rhythm Points = 200 * [(note points)/(# of bars * 40)]^p
+	// p = 1; pretty much the same deal as Key Points.
 
-        // These formulas are carefully derived but certainly inaccurate.
-
-        // "Note points" given by:
+        // "Note points" for key and chords given by:
         //                      1       e       and     a
-        //      ----------------------------------------------
+        //	----------------------------------------------
         // In Key/Chord         5       1       3       1       
         // Rest                 2       1       1       1
         // Deviating            0       0       0       0
         // This allows for an easy max of 10 points per beat.
 
-        // I need at least the last 200 points for random shit. I'll cut into chord tones if necessary.
-        // Basically I'm going to use this for punishing stuff that's static, bloopy, etc.
-
+	// "Note points" for rhythm given by:
+	//			1	e	and	a
+	//	----------------------------------------------
+	// Hard attack		2	0	2	0
+	// Normal attack	3	1	3	1
+	// Tie			2	2	3	2
+	// Rest			0	0	0	0
+	// Also out of 10.
+	// This is way simplistic, and at least a little arbitrary. I've completely avoided
+	// larger structures and focused only on avoiding the worst.
+	// Since our tempo is generally fast, avoiding articulation of the up-sixteenths 
+	// seems like a good way to avoid nonsense. I've also decided to punish rests some more.
+	// Keep in mind that this chart is "pre-swing," that is, articulations on 1 + and should
+	// result in a pair of swung eighths.
+	
 	fitness = 0;
 
 	bytes[0] = (bytes[0] | 1); // make sure melody
