@@ -7,6 +7,7 @@
 #include "header/chromosome.h"
 #include "header/fitness.h"
 #include <stdio.h>
+#include <cmath>
 
 void chromosome::fitnessEval()
 {
@@ -16,21 +17,23 @@ void chromosome::fitnessEval()
 	if(length<=0)
 		return;
 
+	int chords[12] = {1,1,1,1,4,4,1,1,5,4,1,1};
+
 	// Fitness Evaluation Code
 	// Evaluated on Scale 0 - 1000
 
-        // Points awarded for key tones (Scale 0 - 500)
-        // Key Points = 500 * [(note points)/(# of bars * 40)]^n
-        // If the music isn't like 90% in key, I want it to be fucked.
-        // n = 2; raising n may be used in the future to more stringently enforce key.
+    // Points awarded for key tones (Scale 0 - 500)
+    // Key Points = 500 * [(note points)/(# of bars * 40)]^n
+    // If the music isn't like 90% in key, I want it to be fucked.
+    // n = 2; raising n may be used in the future to more stringently enforce key.
 
-        // Points awarded for chord tones 1 - 3 - 5 - 7 (Scale 0 - 300)
-        // Chord Points  = [-300/(# of bars * m)]*|note points-[(# of bars) * m]|+300
-        // m = 7.5; This puts the max points at 75% chord tones, with points decreasing linearly
-        // for higher or lower values. Changing m adjusts the optimal number of points without 
-        // altering the solution note points = 0.
+    // Points awarded for chord tones 1 - 3 - 5 - 7 (Scale 0 - 300)
+    // Chord Points  = [-300/(# of bars * m)]*|note points-[(# of bars) * m]|+300
+    // m = 7.5; This puts the max points at 75% chord tones, with points decreasing linearly
+    // for higher or lower values. Changing m adjusts the optimal number of points without 
+    // altering the solution note points = 0.
         
-        // Points awarded for rhythmic not-shittiness (Scale 0 - 200)
+    // Points awarded for rhythmic not-shittiness (Scale 0 - 200)
 	// Rhythm Points = 200 * [(note points)/(# of bars * 40)]^p
 	// p = 1; pretty much the same deal as Key Points.
 
@@ -57,7 +60,44 @@ void chromosome::fitnessEval()
 	// Keep in mind that this chart is "pre-swing," that is, articulations on 1 + and should
 	// result in a pair of swung eighths.
 	
-	fitness = 0;
+	const double m = 7.5;
+	const double n = 2.0;
+	const double p = 1.0;
+
+	double key_note,chord_note,rhythm_note,key,chord,rhythm;
+
+	int num_bars = (length-1)/16;
+
+	key_note = chord_note = rhythm_note = 0;
+	key = chord = rhythm = 0;
+
+	//parse chromosome
+	int pos = 1;
+	int bar = 0;
+	int timing = 0;
+
+	while(pos<length)
+	{
+		int note = bytes[pos] >> 2;
+		int articulation = bytes[pos] & 3;
+		key_note += note_score(note, 0, articulation, timing%4, chords[bar]);
+		rhythm_note += rhythm_score(articulation, timing%4);
+		chord_note += note_score(note, 0, articulation, timing%4, chords[bar]);
+		pos++;
+		timing++;
+		if(timing==16)
+		{
+			bar++;
+			timing=0;
+		}
+	}
+
+
+	key = 500 * pow((key_note/(num_bars*40)),n);
+	chord = (-300/(num_bars * m)) * abs(chord_note-(num_bars * m)) + 300;
+	rhythm = 200 * pow((rhythm_note/(num_bars*40)),p);
+
+	fitness = key+chord+rhythm;
 
 	bytes[0] = (bytes[0] | 1); // make sure melody
 }
