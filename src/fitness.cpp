@@ -90,6 +90,8 @@ void chromosome::fitnessEval()
 			bar++;
 			timing=0;
 		}
+		if(bar==12)
+			bar=0;
 	}
 
 
