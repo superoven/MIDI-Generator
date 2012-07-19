@@ -8,6 +8,60 @@
 #include "header/fitness.h"
 #include <stdio.h>
 
+int inKey(int note, int key) // key is unused, it'll always be evaluated as C for now
+{
+
+}
+
+int inChord(int note, int key, int chord) // key - see above
+{
+
+}
+
+int note_score(int note, int articulation, int timing, int chord=0, int key=0)
+{
+	// ignoring chord input evaluates note in key
+	if (articulation==0) {
+		if (timing==0)
+			return 2;
+		return 1;
+	}
+	int foo;
+	if (chord==0)
+		foo = inKey(note,key);
+	else
+		foo = inChord(note,key,chord);
+	if (foo==0)
+		return 0;
+	if (timing%2==1)
+		return 1;
+	if (timing==2)
+		return 3;
+	return 5;
+}
+
+int rhythm_score(int articulation, int timing)
+{
+	// This is just me hard-coding scores
+	if (articulation==0)
+		return 0;
+	if (articulation==1) {
+		if (timing==2)
+			return 3;
+		return 2;
+	}
+	if (timing%2==0) {
+		if (articulation==2)
+			return 3;
+		return 2;
+	}
+	if (articulation==2)
+		return 1;
+	return 0;
+}
+	
+
+
 void chromosome::fitnessEval()
 {
 	/*if(!accompanimentSet)
