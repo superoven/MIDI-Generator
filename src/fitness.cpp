@@ -62,17 +62,35 @@ void chromosome::fitnessEval()
 	bytes[0] = (bytes[0] | 1); // make sure melody
 }
 
-int inKey(int note, int key) // key is unused, it'll always be evaluated as C for now
+int inKey(int note, int key)
 {
+	int bar = note%12;
+	if ((bar==(1+key)%12)||(bar==(6+key)%12)||(bar==(8+key)%12))
+		return 0;
+	return 1;
 }
 
-int inChord(int note, int key, int chord) // key - see above
+int inChord(int note, int key, int chord)
 {
+	int foo;
+	int bar = note%12;
+	if (chord==1)
+		foo = 0;
+	else if (chord==4)
+		foo = 5;
+	else
+		foo = 7;
+	int tsum = key+foo;
+	if ((bar==tsum%12)||(bar==(tsum+4)%12)||(bar==(tsum+7)%12)||(bar==(tsum+10)%12))
+		return 1;
+	return 0;
+	
 }
 
-int note_score(int note, int articulation, int timing, int chord=0, int key=0)
+int note_score(int note, int key, int articulation, int timing, int chord=0)
 {
 	// ignoring chord input evaluates note in key
+	// key can be set as any tone number of the root (the first C is 000001)
 	if (articulation==0) {
 		if (timing==0)
 			return 2;
