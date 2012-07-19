@@ -133,4 +133,5 @@ int main()
       if (iterations >= MAX_ITERATIONS) break; //Leave if the maximum number of iterations is exceeded
     }
   statusReport(iterations, mutationCount, crossoverCount, found, population[answerindex]); //Tell us what happened
+  return 0;
 }
