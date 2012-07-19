@@ -80,9 +80,9 @@ void chromosome::fitnessEval()
 	{
 		int note = bytes[pos] >> 2;
 		int articulation = bytes[pos] & 3;
-		key_note += note_score(note, 0, articulation, timing%4, chords[bar]);
+		key_note += note_score(note, 1, articulation, timing%4);
 		rhythm_note += rhythm_score(articulation, timing%4);
-		chord_note += note_score(note, 0, articulation, timing%4, chords[bar]);
+		chord_note += note_score(note, 1, articulation, timing%4, chords[bar]);
 		pos++;
 		timing++;
 		if(timing==16)
