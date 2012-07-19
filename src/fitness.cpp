@@ -76,13 +76,20 @@ void chromosome::fitnessEval()
 	int bar = 0;
 	int timing = 0;
 
+	int prev_note = -1;
+
 	while(pos<length)
 	{
 		int note = bytes[pos] >> 2;
 		int articulation = bytes[pos] & 3;
+
 		key_note += note_score(note, 1, articulation, timing%4);
 		rhythm_note += rhythm_score(articulation, timing%4);
 		chord_note += note_score(note, 1, articulation, timing%4, chords[bar]);
+
+		if((prev_note>=0)&&(abs((double)(note-prev_note))>12))
+			key_note -= 10;
+
 		pos++;
 		timing++;
 		if(timing==16)
@@ -129,7 +136,7 @@ int inChord(int note, int key, int chord)
 	
 }
 
-int note_score(int note, int key, int articulation, int timing, int chord=0)
+int note_score(int note, int key, int articulation, int timing, int chord)
 {
 	// ignoring chord input evaluates note in key
 	// key can be set as any tone number of the root (the first C is 000001)
