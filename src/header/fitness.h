@@ -8,6 +8,13 @@
 #define TOTAL_ACCOMP 2
 
 using namespace std;
+int inKey(int note, int key);
+
+int inChord(int note, int key, int chord);
+
+int note_score(int note, int key, int articulation, int timing, int chord);
+
+int rhythm_score(int articulation, int timing);
 
 void createAccompaniment();
 
