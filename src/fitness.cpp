@@ -64,9 +64,6 @@ void chromosome::fitnessEval()
 
 int inKey(int note, int key)
 {
-  //Mind commenting this? I take it the key will be interpretted as a number and we want to say its not in the key only if those three notes are 
-  //used correct? what are those notes exactly?
-  
 	int bar = note%12;
 	if ((bar==(1+key)%12)||(bar==(6+key)%12)||(bar==(8+key)%12))
 		return 0;
@@ -75,7 +72,6 @@ int inKey(int note, int key)
 
 int inChord(int note, int key, int chord)
 {
-  //This too, what the fuck am I reading.
 	int foo;
 	int bar = note%12;
 	if (chord==1)
