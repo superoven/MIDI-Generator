@@ -17,6 +17,17 @@ void chromosome::fitnessEval()
 	if(length<=0)
 		return;
 
+	if(length<17) // Less than 1 bar of music
+		return;
+	
+	if((length%16)!=1)
+		printf("The last bar of music is not a full bar\n")
+	
+	int num_bars = (length-1)/16;
+	
+	if((num_bars%12)!=0)
+		printf("The number of bars is not a multiple of 12\n")
+	
 	int chords[12] = {1,1,1,1,4,4,1,1,5,4,1,1};
 
 	// Fitness Evaluation Code
@@ -65,8 +76,6 @@ void chromosome::fitnessEval()
 	const double p = 1.0;
 
 	double key_note,chord_note,rhythm_note,key,chord,rhythm,penalty;
-
-	int num_bars = (length-1)/16;
 
 	key_note = chord_note = rhythm_note = penalty = 0;
 	key = chord = rhythm = 0;
