@@ -64,11 +64,11 @@ void chromosome::fitnessEval()
 	const double n = 2.0;
 	const double p = 1.0;
 
-	double key_note,chord_note,rhythm_note,key,chord,rhythm;
+	double key_note,chord_note,rhythm_note,key,chord,rhythm,penalty;
 
 	int num_bars = (length-1)/16;
 
-	key_note = chord_note = rhythm_note = 0;
+	key_note = chord_note = rhythm_note = penalty = 0;
 	key = chord = rhythm = 0;
 
 	//parse chromosome
@@ -88,7 +88,7 @@ void chromosome::fitnessEval()
 		chord_note += note_score(note, 1, articulation, timing%4, chords[bar]);
 
 		if((prev_note>=0)&&(abs((double)(note-prev_note))>12))
-			key_note -= 10;
+			penalty += 10;
 
 		pos++;
 		timing++;
@@ -106,7 +106,7 @@ void chromosome::fitnessEval()
 	chord = (-300/(num_bars * m)) * abs(chord_note-(num_bars * m)) + 300;
 	rhythm = 200 * pow((rhythm_note/(num_bars*40)),p);
 
-	fitness = key+chord+rhythm;
+	fitness = key+chord+rhythm-penalty;
 
 	bytes[0] = (bytes[0] | 1); // make sure melody
 }
