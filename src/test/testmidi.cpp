@@ -111,6 +111,24 @@ int main()
 	else
 		cout<<"An error occurred with tonguing\n";
 
+	cout<<"Swung Eights\n";
+
+	chromosome swung(80+1);
+	swung.setByte(0,1);
+	
+	for(int i=0;i<20;i++)
+	{
+		swung.setByte(i*4 + 1,3);
+		swung.setByte(i*4 + 2,1);
+		swung.setByte(i*4 + 3,3);
+		swung.setByte(i*4 + 4,0);
+	}
+
+	if(createMidi(&swung,1,"midi/swung.mid")==0)
+		cout<<"Saved to midi/swung.midi\n";
+	else
+		cout<<"An error occurred with swung\n";
+
 	cout<<"Testing complete, check midi files to confirm accuracy\n";
 
 	return 0;
