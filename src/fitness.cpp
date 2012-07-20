@@ -80,7 +80,7 @@ void chromosome::fitnessEval()
 
 	while(pos<length)
 	{
-		int note = bytes[pos] >> 2;
+		int note = (int)(bytes[pos]+128) >> 2;
 		int articulation = bytes[pos] & 3;
 
 		key_note += note_score(note, 1, articulation, timing%4);
@@ -100,7 +100,6 @@ void chromosome::fitnessEval()
 		if(bar==12)
 			bar=0;
 	}
-
 
 	key = 500 * pow((key_note/(num_bars*40)),n);
 	chord = (-300/(num_bars * m)) * abs(chord_note-(num_bars * m)) + 300;

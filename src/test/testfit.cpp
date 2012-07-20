@@ -10,7 +10,7 @@ int main()
 
 	cout<<"Creating random chromosome\n";
 
-	chromosome melody(12+1);
+	chromosome melody(120+1);
 
 	cout<<"Printing out the chrosome\n";
 
