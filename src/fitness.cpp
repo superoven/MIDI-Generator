@@ -21,12 +21,12 @@ void chromosome::fitnessEval()
 		return;
 	
 	if((length%16)!=1)
-		printf("The last bar of music is not a full bar\n")
+	  printf("The last bar of music is not a full bar\n");
 	
 	int num_bars = (length-1)/16;
 	
 	if((num_bars%12)!=0)
-		printf("The number of bars is not a multiple of 12\n")
+	  printf("The number of bars is not a multiple of 12\n");
 	
 	int chords[12] = {1,1,1,1,4,4,1,1,5,4,1,1};
 

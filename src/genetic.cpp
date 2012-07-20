@@ -46,18 +46,20 @@ void statusReport(int iter, int mut, int cross, bool found, chromosome& answer) 
   if (found)
     {
       cout << "Found a solution!\n";
-      cout << "Number of iterations:\t" << setw(5) << right << iter << endl;
-      cout << "Number of mutations:\t" << setw(5) << right << mut << endl;
-      cout << "Number of crossovers:\t" << setw(5) << right << cross << endl;
+      cout << "Number of iterations:\t" << setw(7) << right << iter << endl;
+      cout << "Number of mutations:\t" << setw(7) << right << mut << endl;
+      cout << "Number of crossovers:\t" << setw(7) << right << cross << endl;
       cout << "Solution found:\n";
       answer.printChromosome();
+      createMidi(&answer,1,"midi/output.mid");
+      cout << "Solution saved to midi/output.mid.\nPlay it with \'bin/timidity midi/output.mid\'\n";
     }
   else
     {
       cout << "No solution found. Maximum iterations exceeded.\n";
-      cout << "Number of iterations:\t" << setw(5) << right << iter << endl;
-      cout << "Number of mutations:\t" << setw(5) << right << mut << endl;
-      cout << "Number of crossovers:\t" << setw(5) << right << cross << endl;
+      cout << "Number of iterations:\t" << setw(7) << right << iter << endl;
+      cout << "Number of mutations:\t" << setw(7) << right << mut << endl;
+      cout << "Number of crossovers:\t" << setw(7) << right << cross << endl;
     }    
 }
 
@@ -132,5 +134,6 @@ int main()
       if (iterations >= MAX_ITERATIONS) break; //Leave if the maximum number of iterations is exceeded
     }
   statusReport(iterations, mutationCount, crossoverCount, found, population[answerindex]); //Tell us what happened
+
   return 0;
 }
