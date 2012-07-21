@@ -85,6 +85,7 @@ void chromosome::fitnessEval()
 	int bar = 0;
 	int timing = 0;
 
+	int difference = 0;
 	int prev_note = -1;
 
 	while(pos<length)
@@ -96,8 +97,12 @@ void chromosome::fitnessEval()
 		rhythm_note += rhythm_score(articulation, timing%4);
 		chord_note += note_score(note, 1, articulation, timing%4, chords[bar]);
 
-		if((prev_note>=0)&&(abs((double)(note-prev_note))>12))
-			penalty += 10;
+		if(prev_note>=0)
+		{
+			difference = abs((double)(note-prev_note));
+			if(difference>12)
+				penalty += 2*difference;
+		}
 
 		pos++;
 		timing++;

@@ -10,8 +10,8 @@ using namespace std;
 #define MELODY_BASE_VELOCITY 100 //Base MIDI velocity for melody notes
 #define ACCOMP_BASE_VELOCITY 60  //Base MIDI velocity for accompaniment notes
 #define DELTA_HARD 20	// Change in velocity for a hard accented note
-#define LOW_TEMPO 180
-#define HIGH_TEMPO 210
+#define LOW_TEMPO 150
+#define HIGH_TEMPO 180
 #define DELTA_TEMPO ((HIGH_TEMPO-LOW_TEMPO)/15)
 
 struct note
