@@ -104,6 +104,8 @@ void chromosome::fitnessEval()
 				penalty += 2*difference;
 		}
 
+		prev_note = note;
+
 		pos++;
 		timing++;
 		if(timing==16)
