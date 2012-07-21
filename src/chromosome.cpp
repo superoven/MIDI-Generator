@@ -17,6 +17,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <functional>
 #include "header/chromosome.h"
 using namespace std;
 

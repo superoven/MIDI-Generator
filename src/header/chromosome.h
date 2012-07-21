@@ -18,11 +18,11 @@ class chromosome
 private:
   std::vector<char>bytes;				//Note that I have made this a vector instead to bypass double-free headaches
   long length;
-  double fitness;
   static int numchromosomes;
   //chromosome(const chromosome& fuck_you); 		//Make the copy constructor shut up and never work
 
 public:
+  double fitness;
   chromosome(int len); 					//constructor
   ~chromosome(); 					//deconstructor
   void printChromosome(); 				//print method

@@ -48,4 +48,4 @@ obj/%.o: src/test/%.cpp		#Overloaded object compiler for test files
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJECTS) $(TCHROMOBJ) $(TMIDIOBJ) $(TFITOBJ) $(EXECUTABLE) $(TESTMIDI) $(TESTEXE) src/*~ src/test/*~ src/header/*~
+	rm -f $(OBJECTS) $(TCHROMOBJ) $(TMIDIOBJ) $(TFITOBJ) $(EXECUTABLE) $(TESTMIDI) $(TESTEXE) src/*~ src/test/*~ src/header/*~ midi/population* midi/output.mid

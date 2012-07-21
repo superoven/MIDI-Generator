@@ -25,9 +25,12 @@
 
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <algorithm>
+#include <functional>
 #include "header/chromosome.h"
 #include "header/genetic.h"
 #include "header/MIDI-output.h"
@@ -37,11 +40,17 @@ int mutationCount = 0; //Number of mutations that occurred (for debugging)
 int crossoverCount = 0; //Number of crossovers that occurred (for debugging)
 int iterations = 0; //Number of iterations to find a solution
 
+bool compare_fitness(const chromosome & e1, const chromosome & e2)
+{
+  if( e1.fitness > e2.fitness ) return true;
+  return false;
+}
+
 double roulette(int lo, int hi) { //Generate a double precision floating point between hi and lo
   return (((double)(rand()/((double)RAND_MAX + (double)1)) * (hi - lo)) + lo);
 }
 
-void statusReport(int iter, int mut, int cross, bool found, chromosome& answer) //Tell us what happened
+void statusReport(int iter, int mut, int cross, bool found, chromosome& answer, vector<chromosome>& population) //Tell us what happened
 {
   if (found)
     {
@@ -53,6 +62,7 @@ void statusReport(int iter, int mut, int cross, bool found, chromosome& answer) 
       answer.printChromosome();
       createMidi(&answer,1,"midi/output.mid");
       cout << "Solution saved to midi/output.mid.\nPlay it with \'bin/timidity midi/output.mid\'\n";
+      cout << "Entire opulation saved to midi directory.\n";
     }
   else
     {
@@ -138,7 +148,14 @@ int main()
       nextgen.clear(); //clear the memory that we don't need
       if (iterations >= MAX_ITERATIONS) break; //Leave if the maximum number of iterations is exceeded
     }
-  statusReport(iterations, mutationCount, crossoverCount, found, population[answerindex]); //Tell us what happened
-
+  statusReport(iterations, mutationCount, crossoverCount, found, population[answerindex], population); //Tell us what happened
+  sort(population.begin(),population.end(),compare_fitness);
+  for (int i = 1; i < POP_SIZE; i++) 
+    {
+      ostringstream name;
+      chromosome temp = population[i];
+      name << "midi/population" << setw(2) << setfill('0') << i << ".mid";
+      createMidi(&temp,1,name.str());
+    }
   return 0;
 }
