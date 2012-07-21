@@ -15,27 +15,27 @@ TFIT := testfit.cpp fitness.cpp chromosome.cpp
 TFITOBJ := $(addprefix obj/, $(TFIT:.cpp=.o))
 
 CC := g++
-CFLAGS := -g -Wall
+CFLAGS := -g -Wall -fopenmp
 OBJECTS := $(addprefix obj/, $(SOURCEFILES:.cpp=.o))
 EXECUTABLE := genetic
 
 all: $(SOURCES) $(EXECUTABLE) $(HEADERS)
 
 testchrom: $(TCHROMOBJ) $(HEADERS)
-	$(CC) $(TCHROMOBJ) -o $@
+	$(CC) $(CFLAGS) $(TCHROMOBJ) -o $@
 	./$@
 
 testmidi: $(TMIDIOBJ) $(HEADERS)
-	$(CC) $(TMIDIOBJ) -o $@
+	$(CC) $(CFLAGS) $(TMIDIOBJ) -o $@
 	./$@
 	$(PLAYBACK) $(TESTMIDI)
 
 testfit: $(TFITOBJ) $(HEADERS)
-	$(CC) $(TFITOBJ) -o $@
+	$(CC) $(CFLAGS) $(TFITOBJ) -o $@
 	./$@
 
 $(EXECUTABLE): $(OBJECTS) $(HEADERS)
-	$(CC) $(OBJECTS) -o $@
+	$(CC) $(CFLAGS) $(OBJECTS) -o $@
 	./$@
 
 obj/%.o: src/%.cpp src/header/%.h	#Force recompile if associated header changes

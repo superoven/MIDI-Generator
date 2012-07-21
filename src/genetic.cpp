@@ -30,17 +30,23 @@
 #include <ctime>
 #include <vector>
 #include <algorithm>
-#include <functional>
 #include "header/chromosome.h"
 #include "header/genetic.h"
 #include "header/MIDI-output.h"
 using namespace std;
 
+#ifdef _OPENMP //Import parallelism library safely
+#include <omp.h>
+#else
+#define omp_get_num_threads() 0
+#define omp_get_thread_num() 0
+#endif
+
 int mutationCount = 0; //Number of mutations that occurred (for debugging)
 int crossoverCount = 0; //Number of crossovers that occurred (for debugging)
 int iterations = 0; //Number of iterations to find a solution
 
-bool compare_fitness(const chromosome & e1, const chromosome & e2)
+bool compare_fitness(const chromosome & e1, const chromosome & e2) //dummy function for sorting
 {
   if( e1.fitness > e2.fitness ) return true;
   return false;
@@ -77,6 +83,7 @@ int main()
 {
   srand(time(NULL)); //Seed the random number generator
   
+  omp_set_num_threads(omp_get_max_threads());
   vector<chromosome> population; //Create the initial population of random chromosomes
   vector<chromosome> nextgen; //Same with the next generation
   population.reserve(POP_SIZE); //Reserve the memory for the chromosome vector
@@ -88,17 +95,21 @@ int main()
   int save = -1;  
   while (!found) //Primary Loop
     {
-      for(int i = 0; i < POP_SIZE; i++) //Check all the fitness ratings
+      #pragma omp parallel for
+      for(int i = 0; i < POP_SIZE; i++)
 	{
 	  population[i].fitnessEval(); //Determine the fitness of each chromosome
-	  if (population[i].getFitness() > FITNESS_THRESHOLD) //Did we find an answer?
+	}
+      for(int i = 0; i < POP_SIZE; i++) //Check all the fitness ratings
+	{
+	  if (population[i].fitness > FITNESS_THRESHOLD) //Did we find an answer?
 	    {
 	      found = true;
 	      answerindex = i; //Save the index of the winner
 	    }
-          else if (population[i].getFitness() > save+20)
+          else if (population[i].fitness > save+20)
             {
-              save = population[i].getFitness();
+              save = population[i].fitness;
               cout << "Best:\t" << setw(4) << right << save << endl;
             }
 	}
@@ -149,8 +160,10 @@ int main()
       if (iterations >= MAX_ITERATIONS) break; //Leave if the maximum number of iterations is exceeded
     }
   statusReport(iterations, mutationCount, crossoverCount, found, population[answerindex], population); //Tell us what happened
-  sort(population.begin(),population.end(),compare_fitness);
-  for (int i = 1; i < POP_SIZE; i++) 
+
+  sort(population.begin(),population.end(),compare_fitness); //sort population by fitness in descending order
+  
+  for (int i = 1; i < POP_SIZE; i++) //output the entire population because why the hell not
     {
       ostringstream name;
       chromosome temp = population[i];
