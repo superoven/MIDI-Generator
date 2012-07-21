@@ -62,7 +62,7 @@ void statusReport(int iter, int mut, int cross, bool found, chromosome& answer, 
       answer.printChromosome();
       createMidi(&answer,1,"midi/output.mid");
       cout << "Solution saved to midi/output.mid.\nPlay it with \'bin/timidity midi/output.mid\'\n";
-      cout << "Entire opulation saved to midi directory.\n";
+      cout << "Entire population saved to midi directory.\n";
     }
   else
     {
