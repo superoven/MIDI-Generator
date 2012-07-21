@@ -40,7 +40,7 @@ int chromosomeNumNotes(chromosome &C)
 void parseChromosome(chromosome &C, note notes[], int numNotes)
 {
   bool melody = C.getByte(0)&1;
-  BPM = LOW_TEMPO + DELTA_TEMPO*((unsigned char)(C.getByte(0)>>4));
+  BPM = LOW_TEMPO + (((unsigned char)(C.getByte(0))>>4)*DELTA_TEMPO);
 
   note tmp;
   unsigned char tmp_byte;
