@@ -75,7 +75,7 @@ int main()
 
   bool found = false; //True if we found an answer
   int answerindex = -1; //The index in the population of the winner
-  
+  int save = -1;  
   while (!found) //Primary Loop
     {
       for(int i = 0; i < POP_SIZE; i++) //Check all the fitness ratings
@@ -86,6 +86,11 @@ int main()
 	      found = true;
 	      answerindex = i; //Save the index of the winner
 	    }
+          else if (population[i].getFitness() > save+20)
+            {
+              save = population[i].getFitness();
+              cout << "Best:\t" << setw(4) << right << save << endl;
+            }
 	}
       if (found) break; //If we have an answer, stop looking for one
       unsigned int survivors = (rand() % (POP_SIZE - POP_REMAIN_LOWBOUND)) + POP_REMAIN_LOWBOUND; //how many children will there be from the previous gen
