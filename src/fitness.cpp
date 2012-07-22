@@ -5,12 +5,6 @@
   Fitness Evaluation Code
   Evaluated on Scale 0 - 1000
 
-  Points awarded for key tones (Scale 0 - 500)
-  CHANGE - NO MORE KEY POINTS
-  Key Points = 0 * [(note points)/(# of bars * 40)]^n
-  If the music isn't like 90% in key, I want it to be fucked.
-  n = 2; raising n may be used in the future to more stringently enforce key.
-
   Points awarded for chord tones 1 - 3 - 5 - 7 (Scale 0 - 500)
   Chord Points  = [-500/(# of bars * m)]*|note points-[(# of bars) * m]|+500
   m = 7.5; This puts the max points at 75% chord tones, with points decreasing linearly
@@ -21,7 +15,7 @@
   Rhythm Points = 500 * [(note points)/(# of bars * 40)]^p
   p = 1; pretty much the same deal as Key Points.
 
-  "Note points" for key and chords given by:
+  "Note points" for chords given by:
                        1       e       and     a
   ----------------------------------------------
   In Key/Chord         5       1       3       1       
@@ -30,19 +24,13 @@
   This allows for an easy max of 10 points per beat.
   
   "Note points" for rhythm given by:
-  		1	e	and	a
-  ----------------------------------------------
-  Hard attack		1	0	1	0
-  Normal attack	1	0	1	0
-  Tie			3	2	3	2
+  			1	e	and	a
+  -----------------------------------------------
+  Hard attack		2	0	2	0
+  Normal attack		3	0	3	0
+  Tie			2	2	2	2
   Rest			1	1	1	1
   Also out of 10.
-  This is way simplistic, and at least a little arbitrary. I've completely avoided
-  larger structures and focused only on avoiding the worst.
-  Since our tempo is generally fast, avoiding articulation of the up-sixteenths 
-  seems like a good way to avoid nonsense. I've also decided to punish rests some more.
-  Keep in mind that this chart is "pre-swing," that is, articulations on 1 + and should
-  result in a pair of swung eighths.
   -------------------------
 */
 
@@ -73,15 +61,12 @@ void chromosome::fitnessEval()
 	int chords[12] = {1,1,1,1,4,4,1,1,5,4,1,1};
 
 	const double m = 9.0;
-	// const double n = 2.0; Not in use
 	const double p = 1.0;
 
 	double chord_note,rhythm_note,chord,rhythm,penalty;
-	// double key_note, key;
 
 	chord_note = rhythm_note = penalty = 0;
 	chord = rhythm = 0;
-	// key_note = key = 0;
 
 	//parse chromosome
 	int pos = 1;
@@ -96,7 +81,6 @@ void chromosome::fitnessEval()
 		int note = (int)(bytes[pos]+128) >> 2;
 		int articulation = bytes[pos] & 3;
 
-		// key_note += note_score(note, 1, articulation, timing%4);
 		rhythm_note += rhythm_score(articulation, timing%4);
 		chord_note += note_score(note, 1, articulation, timing%4, chords[bar]);
 
@@ -121,7 +105,6 @@ void chromosome::fitnessEval()
 			bar=0;
 	}
 
-	// key = 0 * pow((key_note/(num_bars*40)),n);
 	chord = (-500/(num_bars * m)) * abs(chord_note-(num_bars * m)) + 500;
 	rhythm = 500 * pow((rhythm_note/(num_bars*40)),p);
 
@@ -129,16 +112,6 @@ void chromosome::fitnessEval()
 
 	bytes[0] = (bytes[0] | 1); // make sure melody
 }
-
-/*
-int inKey(int note, int key)
-{
-	int bar = note%12;
-	if ((bar==(1+key)%12)||(bar==(6+key)%12)||(bar==(8+key)%12))
-		return 0;
-	return 1;
-}
-*/
 
 int inChord(int note, int key, int chord)
 {
@@ -181,13 +154,13 @@ int rhythm_score(int articulation, int timing)
 	// This is just me hard-coding scores
 	if (articulation==0)
 		return 1;
-	if (timing%2==0) {
-		if (articulation==1)
-			return 3;
-		return 1;
-	}
 	if (articulation==1)
 		return 2;
+	if (timing%2==0) {
+		if (articulation==2)
+			return 3;
+		return 2;
+	}
 	return 0;
 }
 
