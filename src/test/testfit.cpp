@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include "../header/chromosome.h"
 #include "../header/fitness.h"
+#include "../header/MIDI-output.h"
 using namespace std;
 
 int main()
@@ -12,7 +13,7 @@ int main()
 
 	chromosome melody(120+1);
 
-	cout<<"Printing out the chrosome\n";
+	cout<<"Printing out the chromosome\n";
 
 	melody.printChromosome();
 
@@ -24,5 +25,10 @@ int main()
 
 	melody.printChromosome();
 
+	if (createMidi(&melody,1,"midi/test.mid")==0)
+		cout<<"Music saved to /midi/test.mid\n";
+	else
+		cout<<"Error: Unable to save music";
+	
 	return 0;
 }

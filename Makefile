@@ -11,7 +11,7 @@ TCHROMOBJ := $(addprefix obj/, $(TCHROM:.cpp=.o))
 TMIDI := MIDI-output.cpp testmidi.cpp chromosome.cpp
 TMIDIOBJ := $(addprefix obj/, $(TMIDI:.cpp=.o))
 
-TFIT := testfit.cpp fitness.cpp chromosome.cpp
+TFIT := testfit.cpp fitness.cpp chromosome.cpp MIDI-output.cpp
 TFITOBJ := $(addprefix obj/, $(TFIT:.cpp=.o))
 
 CC := g++
