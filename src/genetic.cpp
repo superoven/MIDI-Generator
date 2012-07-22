@@ -65,7 +65,6 @@ void statusReport(int iter, int mut, int cross, bool found, chromosome& answer, 
       cout << "Number of iterations:\t" << setw(7) << right << iter << endl;
       cout << "Number of mutations:\t" << setw(7) << right << mut << endl;
       cout << "Number of crossovers:\t" << setw(7) << right << cross << endl;
-      cout << "Solution found:\n";
       createMidi(&answer,1,"midi/output.mid");
       cout << "Solution saved to midi/output.mid.\nPlay it with \'bin/timidity midi/output.mid\'\n";
       cout << "Entire population saved to midi directory.\n";
