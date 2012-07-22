@@ -1,6 +1,48 @@
 /*
   -------------------------
   Fitness Function
+
+  Fitness Evaluation Code
+  Evaluated on Scale 0 - 1000
+
+  Points awarded for key tones (Scale 0 - 500)
+  CHANGE - NO MORE KEY POINTS
+  Key Points = 0 * [(note points)/(# of bars * 40)]^n
+  If the music isn't like 90% in key, I want it to be fucked.
+  n = 2; raising n may be used in the future to more stringently enforce key.
+
+  Points awarded for chord tones 1 - 3 - 5 - 7 (Scale 0 - 500)
+  Chord Points  = [-500/(# of bars * m)]*|note points-[(# of bars) * m]|+500
+  m = 7.5; This puts the max points at 75% chord tones, with points decreasing linearly
+  for higher or lower values. Changing m adjusts the optimal number of points without 
+  altering the solution note points = 0.
+        
+  Points awarded for rhythmic not-shittiness (Scale 0 - 500)
+  Rhythm Points = 500 * [(note points)/(# of bars * 40)]^p
+  p = 1; pretty much the same deal as Key Points.
+
+  "Note points" for key and chords given by:
+                       1       e       and     a
+  ----------------------------------------------
+  In Key/Chord         5       1       3       1       
+  Rest                 2       1       1       1
+  Deviating            0       0       0       0
+  This allows for an easy max of 10 points per beat.
+  
+  "Note points" for rhythm given by:
+  		1	e	and	a
+  ----------------------------------------------
+  Hard attack		1	0	1	0
+  Normal attack	1	0	1	0
+  Tie			3	2	3	2
+  Rest			1	1	1	1
+  Also out of 10.
+  This is way simplistic, and at least a little arbitrary. I've completely avoided
+  larger structures and focused only on avoiding the worst.
+  Since our tempo is generally fast, avoiding articulation of the up-sixteenths 
+  seems like a good way to avoid nonsense. I've also decided to punish rests some more.
+  Keep in mind that this chart is "pre-swing," that is, articulations on 1 + and should
+  result in a pair of swung eighths.
   -------------------------
 */
 
@@ -30,48 +72,6 @@ void chromosome::fitnessEval()
 	
 	int chords[12] = {1,1,1,1,4,4,1,1,5,4,1,1};
 
-	// Fitness Evaluation Code
-	// Evaluated on Scale 0 - 1000
-
-    // Points awarded for key tones (Scale 0 - 500)
-    // CHANGE - NO MORE KEY POINTS
-    // Key Points = 0 * [(note points)/(# of bars * 40)]^n
-    // If the music isn't like 90% in key, I want it to be fucked.
-    // n = 2; raising n may be used in the future to more stringently enforce key.
-
-    // Points awarded for chord tones 1 - 3 - 5 - 7 (Scale 0 - 500)
-    // Chord Points  = [-500/(# of bars * m)]*|note points-[(# of bars) * m]|+500
-    // m = 7.5; This puts the max points at 75% chord tones, with points decreasing linearly
-    // for higher or lower values. Changing m adjusts the optimal number of points without 
-    // altering the solution note points = 0.
-        
-    // Points awarded for rhythmic not-shittiness (Scale 0 - 500)
-	// Rhythm Points = 500 * [(note points)/(# of bars * 40)]^p
-	// p = 1; pretty much the same deal as Key Points.
-
-        // "Note points" for key and chords given by:
-        //                      1       e       and     a
-        //	----------------------------------------------
-        // In Key/Chord         5       1       3       1       
-        // Rest                 2       1       1       1
-        // Deviating            0       0       0       0
-        // This allows for an easy max of 10 points per beat.
-
-	// "Note points" for rhythm given by:
-	//			1	e	and	a
-	//	----------------------------------------------
-	// Hard attack		1	0	1	0
-	// Normal attack	1	0	1	0
-	// Tie			3	2	3	2
-	// Rest			1	1	1	1
-	// Also out of 10.
-	// This is way simplistic, and at least a little arbitrary. I've completely avoided
-	// larger structures and focused only on avoiding the worst.
-	// Since our tempo is generally fast, avoiding articulation of the up-sixteenths 
-	// seems like a good way to avoid nonsense. I've also decided to punish rests some more.
-	// Keep in mind that this chart is "pre-swing," that is, articulations on 1 + and should
-	// result in a pair of swung eighths.
-	
 	const double m = 9.0;
 	// const double n = 2.0; Not in use
 	const double p = 1.0;
