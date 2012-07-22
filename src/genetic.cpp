@@ -107,7 +107,7 @@ int main()
 	      found = true;
 	      answerindex = i; //Save the index of the winner
 	    }
-          else if (population[i].fitness > save+10)
+          else if (population[i].fitness > save+5)
             {
               save = population[i].fitness;
               cout << "Best Fitness Score: " << setw(4) << right << save << "/1000 (Threshold: " << FITNESS_THRESHOLD << ")\r";
