@@ -78,7 +78,7 @@ void chromosome::fitnessEval()
 
 	while(pos<length)
 	{
-		int note = (int)(bytes[pos]+128) >> 2;
+		int note = (unsigned char)(bytes[pos]) >> 2;
 		int articulation = bytes[pos] & 3;
 
 		rhythm_note += rhythm_score(articulation, timing%4);
