@@ -55,7 +55,3 @@ Then enter the main loop by which we:
 `testchrom.cpp` is a test file to check the chromosome class functions.
 
 `testmidi.cpp` is a test file for the MIDI output functionality.
-
-## Todo
-
-* Implement the fitness function
