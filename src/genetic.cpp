@@ -66,7 +66,6 @@ void statusReport(int iter, int mut, int cross, bool found, chromosome& answer, 
       cout << "Number of mutations:\t" << setw(7) << right << mut << endl;
       cout << "Number of crossovers:\t" << setw(7) << right << cross << endl;
       cout << "Solution found:\n";
-      answer.printChromosome();
       createMidi(&answer,1,"midi/output.mid");
       cout << "Solution saved to midi/output.mid.\nPlay it with \'bin/timidity midi/output.mid\'\n";
       cout << "Entire population saved to midi directory.\n";
@@ -112,7 +111,7 @@ int main()
           else if (population[i].fitness > save+10)
             {
               save = population[i].fitness;
-              cout << "Best:\t" << setw(4) << right << save << "\r";
+              cout << "Best Fitness Score: " << setw(4) << right << save << "/1000 (Threshold: " << FITNESS_THRESHOLD << ")\r";
 	      cout.flush();
             }
 	}
