@@ -168,7 +168,7 @@ int main()
 
   sort(population.begin(),population.end(),compare_fitness); //sort population by fitness in descending order
   
-  for (int i = 1; i < POP_SIZE; i++) //output the entire population because why the hell not
+  for (int i = ((found) ? 1 : 0); i < POP_SIZE; i++) //output the entire population because why the hell not
     {
       ostringstream name;
       chromosome temp = population[i];
