@@ -28,6 +28,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <ctime>
+#include <cmath>
 #include <vector>
 #include <algorithm>
 #include "header/chromosome.h"
@@ -107,10 +108,11 @@ int main()
 	      found = true;
 	      answerindex = i; //Save the index of the winner
 	    }
-          else if (population[i].fitness > save+20)
+          else if (population[i].fitness > save+10)
             {
               save = population[i].fitness;
-              cout << "Best:\t" << setw(4) << right << save << endl;
+              cout << "Best:\t" << setw(4) << right << save << "\r";
+	      cout.flush();
             }
 	}
       if (found) break; //If we have an answer, stop looking for one
@@ -167,7 +169,7 @@ int main()
     {
       ostringstream name;
       chromosome temp = population[i];
-      name << "midi/population" << setw(2) << setfill('0') << i << ".mid";
+      name << "midi/population" << setw((int)log10(POP_SIZE - 1) + 1) << setfill('0') << i << ".mid";
       createMidi(&temp,1,name.str());
     }
   return 0;
