@@ -57,7 +57,7 @@ double roulette(int lo, int hi) { //Generate a double precision floating point b
   return (((double)(rand()/((double)RAND_MAX + (double)1)) * (hi - lo)) + lo);
 }
 
-void statusReport(int iter, int mut, int cross, bool found, chromosome& answer, vector<chromosome>& population) //Tell us what happened
+void statusReport(int iter, int mut, int cross, bool found, clock_t itime, chromosome& answer, vector<chromosome>& population) //Tell us what happened
 {
   if (found)
     {
@@ -65,16 +65,18 @@ void statusReport(int iter, int mut, int cross, bool found, chromosome& answer, 
       cout << "Number of iterations:\t" << setw(7) << right << iter << endl;
       cout << "Number of mutations:\t" << setw(7) << right << mut << endl;
       cout << "Number of crossovers:\t" << setw(7) << right << cross << endl;
+      cout << "Total Time elapsed:\t" << setw(7) << right << (double)(clock() - itime)/CLOCKS_PER_SEC << "s\n";
       createMidi(&answer,1,"midi/output.mid");
       cout << "Solution saved to midi/output.mid.\nPlay it with \'bin/timidity midi/output.mid\'\n";
       cout << "Entire population saved to midi directory.\n";
     }
   else
     {
-      cout << "No solution found. Maximum iterations exceeded.\n";
+      cout << "No solution found.\n";
       cout << "Number of iterations:\t" << setw(7) << right << iter << endl;
       cout << "Number of mutations:\t" << setw(7) << right << mut << endl;
       cout << "Number of crossovers:\t" << setw(7) << right << cross << endl;
+      cout << "Total Time elapsed:\t" << setw(7) << right << (double)(clock() - itime)/CLOCKS_PER_SEC << "s\n";
       cout << "Entire population saved to midi directory.\n";
     }    
 }
@@ -82,6 +84,8 @@ void statusReport(int iter, int mut, int cross, bool found, chromosome& answer, 
 int main()
 {
   srand(time(NULL)); //Seed the random number generator
+
+  clock_t inittime = clock();
   
   omp_set_num_threads(omp_get_max_threads());
   vector<chromosome> population; //Create the initial population of random chromosomes
@@ -160,7 +164,7 @@ int main()
       nextgen.clear(); //clear the memory that we don't need
       if (iterations >= MAX_ITERATIONS) break; //Leave if the maximum number of iterations is exceeded
     }
-  statusReport(iterations, mutationCount, crossoverCount, found, population[answerindex], population); //Tell us what happened
+  statusReport(iterations, mutationCount, crossoverCount, found, inittime, population[answerindex], population); //Tell us what happened
 
   sort(population.begin(),population.end(),compare_fitness); //sort population by fitness in descending order
   
