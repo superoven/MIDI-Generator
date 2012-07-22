@@ -38,7 +38,6 @@ $(EXECUTABLE): $(OBJECTS) $(HEADERS)
 	$(CC) $(CFLAGS) $(OBJECTS) -o $@
 	./$@
 	timidity midi/output.mid -Ow -o midi/out.wav
-	ffmpeg -b 192k -i midi/out.wav output.mp3
 
 obj/%.o: src/%.cpp src/header/%.h	#Force recompile if associated header changes
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -50,4 +49,4 @@ obj/%.o: src/test/%.cpp		#Overloaded object compiler for test files
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJECTS) $(TCHROMOBJ) $(TMIDIOBJ) $(TFITOBJ) $(EXECUTABLE) $(TESTMIDI) $(TESTEXE) src/*~ src/test/*~ src/header/*~ midi/population* midi/output.mid midi/out.wav output.mp3
+	rm -f $(OBJECTS) $(TCHROMOBJ) $(TMIDIOBJ) $(TFITOBJ) $(EXECUTABLE) $(TESTMIDI) $(TESTEXE) src/*~ src/test/*~ src/header/*~ midi/population* midi/output.mid midi/out.wav
