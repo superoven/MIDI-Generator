@@ -61,7 +61,7 @@ void statusReport(int iter, int mut, int cross, bool found, clock_t itime, chrom
 {
   if (found)
     {
-      cout << "Found a solution!\n";
+      cout << "\nFound a solution!\n";
       cout << "Number of iterations:\t" << setw(7) << right << iter << endl;
       cout << "Number of mutations:\t" << setw(7) << right << mut << endl;
       cout << "Number of crossovers:\t" << setw(7) << right << cross << endl;
@@ -72,7 +72,7 @@ void statusReport(int iter, int mut, int cross, bool found, clock_t itime, chrom
     }
   else
     {
-      cout << "No solution found.\n";
+      cout << "\nNo solution found.\n";
       cout << "Number of iterations:\t" << setw(7) << right << iter << endl;
       cout << "Number of mutations:\t" << setw(7) << right << mut << endl;
       cout << "Number of crossovers:\t" << setw(7) << right << cross << endl;
