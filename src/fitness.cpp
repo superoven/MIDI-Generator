@@ -84,7 +84,7 @@ void chromosome::fitnessEval()
 		rhythm_note += rhythm_score(articulation, timing%4);
 		chord_note += note_score(note, 1, articulation, timing%4, chords[bar]);
 
-		if ((note>37)||(note<13))
+		if ((note>43)||(note<8))
 			penalty += 240/num_bars;
 
 		if(prev_note>=0)
