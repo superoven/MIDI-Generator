@@ -74,10 +74,8 @@ void parseChromosome(chromosome &C, note notes[], int numNotes)
 	      pos++;
 	    }
 
-	  if(triplet) {
+	  if(triplet)
 	    tmp.end = (triplet_start-1)*(TICKS_PER_QUARTER/4) + (pos-triplet_start)*(TICKS_PER_QUARTER/3);
-	    printf("%d %d\n",tmp.start,tmp.end);
-	    }
 	  else
 	    tmp.end = (pos-1)*(TICKS_PER_QUARTER/4);
 
