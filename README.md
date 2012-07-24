@@ -55,3 +55,11 @@ Then enter the main loop by which we:
 `testchrom.cpp` is a test file to check the chromosome class functions.
 
 `testmidi.cpp` is a test file for the MIDI output functionality.
+
+## Todo
+
+* Use a background track
+
+* Adapt to arbitrary keys
+
+* Improve output musicality
