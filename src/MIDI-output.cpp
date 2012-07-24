@@ -60,7 +60,7 @@ void parseChromosome(chromosome &C, note notes[], int numNotes)
       tmp_byte = C.getByte(pos);
       if(tmp_byte&(1<<1))
 	{
-	  if(((pos&3)==1)&&(C.getByte(pos+2)&(1<<1))&&((C.getByte(pos+3)&3)==0))
+	  if(((pos&3)==1)&&(C.getByte(pos+2)&(1<<1))&&((C.getByte(pos+3)&3)<2))
 	    {
 	      triplet = true;
 	      triplet_start = pos;
