@@ -65,16 +65,19 @@ void parseChromosome(chromosome &C, note notes[], int numNotes)
       tmp_byte = C.getByte(pos);
       if(tmp_byte&(1<<1)) // If articulation
 	{		
-	  tmp.start = (pos-1)*(TICKS_PER_QUARTER/4);
-
-	  pos++;
+          tmp.start = (pos-1)*(TICKS_PER_QUARTER/4);
+          if(triplet)
+            tmp.start += (pos-triplet_start)*(TICKS_PER_QUARTER/12);
+          pos++;
 	  while(pos<len && ((C.getByte(pos)&3)==1))
 	    {
 	      pos++;
 	    }
 
-	  if(triplet)
+	  if(triplet) {
 	    tmp.end = (triplet_start-1)*(TICKS_PER_QUARTER/4) + (pos-triplet_start)*(TICKS_PER_QUARTER/3);
+	    printf("%d %d\n",tmp.start,tmp.end);
+	    }
 	  else
 	    tmp.end = (pos-1)*(TICKS_PER_QUARTER/4);
 
