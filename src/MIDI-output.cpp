@@ -54,18 +54,17 @@ void parseChromosome(chromosome &C, note notes[], int numNotes)
 
   while(pos<len)
     {
-      if((pos&3)==0)
+      if((pos&3)==0) // Fourth 16th in beat, turn off triplets
 	triplet = false;
+      if(((pos&3)==1)&&(C.getByte(pos+2)&(1<<1))&&((C.getByte(pos+3)&3)<2))
+        {
+          triplet = true;
+          triplet_start = pos;
+	}
       /* determine note info */
       tmp_byte = C.getByte(pos);
-      if(tmp_byte&(1<<1))
-	{
-	  if(((pos&3)==1)&&(C.getByte(pos+2)&(1<<1))&&((C.getByte(pos+3)&3)<2))
-	    {
-	      triplet = true;
-	      triplet_start = pos;
-	    }
-			
+      if(tmp_byte&(1<<1)) // If articulation
+	{		
 	  tmp.start = (pos-1)*(TICKS_PER_QUARTER/4);
 
 	  pos++;
