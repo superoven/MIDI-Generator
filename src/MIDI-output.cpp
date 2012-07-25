@@ -43,71 +43,189 @@ void parseChromosome(chromosome &C, note notes[], int numNotes)
   BPM = LOW_TEMPO + (((unsigned char)(C.getByte(0))>>4)*DELTA_TEMPO);
 
   note tmp;
-  unsigned char tmp_byte;
+  unsigned char tmp_bytes[4];
 
   int pos = 1;
   int current = 0;
   int len = C.getLength();
-  int adj,stoe=0;
+  int small_pos,stoe=0;
 
   bool triplet = false;
-  uint32_t triplet_start = 0;
+  bool tied = false;
+  uint32_t beat_start = 0;
 
   while(pos<len)
     {
-      if((pos&3)==1) // Fourth 16th in beat, turn off triplets
+		for(int i=0;i<4;i++)
+			tmp_bytes[i] = C.getByte(pos+i);
+
+		pos+=4;
+		small_pos = 0;
 		triplet = false;
-      if(((pos&3)==1)&&(C.getByte(pos+2)&(1<<1))&&((C.getByte(pos+3)&3)<2)) // First 16th in beat, 3rd is articulated, 4th is not
-        {
-          triplet = true;
-          triplet_start = pos;
-	}
-      adj = 0;
-      /* determine note info */
-      tmp_byte = C.getByte(pos);
-      if(tmp_byte&(1<<1)) // If articulation
-	{		
-          tmp.start = (pos-1)*(TICKS_PER_QUARTER/4);
-          if(triplet) 
-            tmp.start = (triplet_start-1)*(TICKS_PER_QUARTER/4) + (pos-triplet_start)*(TICKS_PER_QUARTER/3);
+		beat_start = (pos-1)*(TICKS_PER_QUARTER/4);
 
-          do
-            {
-              pos++;
-              adj++;
-	    } 
-          while(pos<len && ((C.getByte(pos)&3)==1));
+		if((tmp_bytes[2]&(1<<1))&&((tmp_bytes[3]&3)<2)) // 3rd articulated, 4th not
+			triplet = true;
 
-          if(triplet)
-            {
-              if((pos&3)==1)
-                adj--;
-              tmp.end = tmp.start + adj*(TICKS_PER_QUARTER/3);
-            }
-          else
-            tmp.end = (pos-1)*(TICKS_PER_QUARTER/4);
+		if(triplet)
+		{
+			if(tied)
+			{
+				while((tmp_bytes[small_pos]&3)==1) //articulation guarenteed, don't have to check bounds of array
+					small_pos++;
 
-		if(tmp.start<stoe)
-			printf("you dun goofed\n");
-		stoe = tmp.end;
+				tmp.end = beat_start + small_pos*(TICKS_PER_QUARTER/3);
 
-	  tmp.pitch = 35 + (tmp_byte>>2);
+				stoe = tmp.end;
 
-	  tmp.melody = melody;
+				notes[current++] = tmp;
+				tied = false;
+			}
+			if(small_pos==0)
+			{
+				if(tmp_bytes[0]&(1<<1))
+				{
+					tmp.pitch = 35 + (tmp_bytes[0]>>2);
 
-	  if(melody)
-	    tmp.velocity = MELODY_BASE_VELOCITY;
-	  else
-	    tmp.velocity = ACCOMP_BASE_VELOCITY;
-	  if(tmp_byte&1)
-	    tmp.velocity += DELTA_HARD;
+					tmp.melody = melody;
 
-	  notes[current++] = tmp;
-	}
-      else
-	{
-	  pos++;
-	}
+					if(melody)
+						tmp.velocity = MELODY_BASE_VELOCITY;
+					else
+						tmp.velocity = ACCOMP_BASE_VELOCITY;
+					if(tmp_bytes[0]&1)
+						tmp.velocity += DELTA_HARD;
+
+					tmp.start = beat_start;
+
+					if(tmp.start<stoe)
+						printf("you dun goofed\n");
+				}
+
+				tmp.end = beat_start + (TICKS_PER_QUARTER/3);
+				small_pos++;
+				if((tmp_bytes[1]&3) == 1)
+				{
+					tmp.end += (TICKS_PER_QUARTER/3);
+					small_pos++;
+				}
+
+				stoe = tmp.end;
+
+				notes[current++] = tmp;
+				tied = false;
+			}
+			if(small_pos==1)
+			{
+				if(tmp_bytes[1]&(1<<1))
+				{
+					tmp.pitch = 35 + (tmp_bytes[1]>>2);
+
+					tmp.melody = melody;
+
+					if(melody)
+						tmp.velocity = MELODY_BASE_VELOCITY;
+					else
+						tmp.velocity = ACCOMP_BASE_VELOCITY;
+					if(tmp_bytes[1]&1)
+						tmp.velocity += DELTA_HARD;
+
+					tmp.start = beat_start + (TICKS_PER_QUARTER/3);
+
+					if(tmp.start<stoe)
+						printf("you dun goofed\n");
+
+					tmp.end = beat_start + 2*(TICKS_PER_QUARTER/3);
+					stoe = tmp.end;
+					notes[current++] = tmp;
+				}
+				small_pos++;
+			}
+			if(small_pos==2)
+			{
+				tmp.pitch = 35 + (tmp_bytes[2]>>2);
+
+				tmp.melody = melody;
+
+				if(melody)
+					tmp.velocity = MELODY_BASE_VELOCITY;
+				else
+					tmp.velocity = ACCOMP_BASE_VELOCITY;
+				if(tmp_bytes[2]&1)
+					tmp.velocity += DELTA_HARD;
+
+				tmp.start = beat_start + 2*(TICKS_PER_QUARTER/3);
+
+				if(tmp.start<stoe)
+					printf("you dun goofed\n");
+
+				if((C.getByte(pos)&3)==1)
+					tied = true;
+				else
+				{
+					tmp.end = beat_start + TICKS_PER_QUARTER;
+					stoe = tmp.end;
+					notes[current++] = tmp;
+				}
+			}
+		}
+		else
+		{
+			if(tied)
+			{
+				while((small_pos<4)&&((tmp_bytes[small_pos]&3)==1))
+					small_pos++;
+				if((small_pos==4)&&((C.getByte(pos)&3)==1))
+					tied = true;
+				else
+				{
+					tmp.end = beat_start + small_pos*(TICKS_PER_QUARTER/4);
+
+					stoe = tmp.end;
+
+					notes[current++] = tmp;
+					tied = false;
+				}
+			}
+			while(small_pos<4)
+			{
+				while((tmp_bytes[small_pos]&3)<2)
+					small_pos++;
+				if(small_pos<4)
+				{
+					tmp.pitch = 35 + (tmp_bytes[small_pos]>>2);
+
+					tmp.melody = melody;
+
+					if(melody)
+						tmp.velocity = MELODY_BASE_VELOCITY;
+					else
+						tmp.velocity = ACCOMP_BASE_VELOCITY;
+					if(tmp_bytes[small_pos]&1)
+						tmp.velocity += DELTA_HARD;
+
+					tmp.start = beat_start + small_pos*(TICKS_PER_QUARTER/4);
+
+					if(tmp.start<stoe)
+						printf("you dun goofed\n");
+
+					small_pos++;
+					while((small_pos<4)&&((tmp_bytes[small_pos]&3)==1))
+						small_pos++;
+					if((small_pos==4)&&((C.getByte(pos)&3)==1))
+						tied = true;
+					else
+					{
+						tmp.end = beat_start + small_pos*(TICKS_PER_QUARTER/4);
+
+						stoe = tmp.end;
+
+						notes[current++] = tmp;
+						tied = false;
+					}
+				}
+			}
+		}
     }
 }
 
