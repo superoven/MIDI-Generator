@@ -48,15 +48,15 @@ void parseChromosome(chromosome &C, note notes[], int numNotes)
   int pos = 1;
   int current = 0;
   int len = C.getLength();
-  int adj;
+  int adj,stoe=0;
 
   bool triplet = false;
   uint32_t triplet_start = 0;
 
   while(pos<len)
     {
-      if((pos&3)==0) // Fourth 16th in beat, turn off triplets
-	triplet = false;
+      if((pos&3)==1) // Fourth 16th in beat, turn off triplets
+		triplet = false;
       if(((pos&3)==1)&&(C.getByte(pos+2)&(1<<1))&&((C.getByte(pos+3)&3)<2)) // First 16th in beat, 3rd is articulated, 4th is not
         {
           triplet = true;
@@ -69,7 +69,7 @@ void parseChromosome(chromosome &C, note notes[], int numNotes)
 	{		
           tmp.start = (pos-1)*(TICKS_PER_QUARTER/4);
           if(triplet) 
-            tmp.start += (pos-triplet_start)*(TICKS_PER_QUARTER/12);
+            tmp.start = (triplet_start-1)*(TICKS_PER_QUARTER/4) + (pos-triplet_start)*(TICKS_PER_QUARTER/3);
 
           do
             {
@@ -86,6 +86,10 @@ void parseChromosome(chromosome &C, note notes[], int numNotes)
             }
           else
             tmp.end = (pos-1)*(TICKS_PER_QUARTER/4);
+
+		if(tmp.start<stoe)
+			printf("you dun goofed\n");
+		stoe = tmp.end;
 
 	  tmp.pitch = 35 + (tmp_byte>>2);
 
