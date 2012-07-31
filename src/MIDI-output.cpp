@@ -183,7 +183,7 @@ void parseChromosome(chromosome &C, note notes[], int numNotes)
 			{
 				while((small_pos<4)&&((tmp_bytes[small_pos]&3)==1))
 					small_pos++;
-				if((small_pos==4)&&((C.getByte(pos)&3)==1))
+				if((small_pos==4)&&(pos<len)&&((C.getByte(pos)&3)==1))
 					tied = true;
 				else
 				{
