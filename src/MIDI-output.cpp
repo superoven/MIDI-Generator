@@ -288,11 +288,7 @@ void sortEvents(event events[], int len)
     }
 }
 
-<<<<<<< HEAD
-int outputFile(string file, note_t notes[], event_t events[], int numEvents)
-=======
 int outputFile(string file, note* notes[], event* events[], int numEvents[], int numTracks)
->>>>>>> 713adbfcdf5994a56546692a00920f76444811ca
 {
   FILE* out;
 
