@@ -1,7 +1,7 @@
 SOURCEFILES := genetic.cpp chromosome.cpp MIDI-output.cpp fitness.cpp
 SOURCES := $(addprefix src/, $(SOURCEFILES))
 HEADERS := $(addprefix src/header/, chromosome.h genetic.h MIDI-output.h fitness.h)
-TESTMIDI := $(addprefix midi/, chromatic.mid notes.mid accents.mid tonguing.mid swung.mid)
+TESTMIDI := $(addprefix midi/, chromatic.mid notes.mid accents.mid tonguing.mid swung.mid mix.mid)
 TESTEXE := testchrom testmidi testfit
 PLAYBACK := ./bin/timidity		#Link to ubuntu midi playback binary, change this if you compiled it yourself
 

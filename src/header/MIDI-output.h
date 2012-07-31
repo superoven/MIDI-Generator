@@ -40,7 +40,7 @@ void parseNotes(note notes[], event events[], int numNotes);
 
 void sortEvents(event events[], int len);
 
-int outputFile(string file, note notes[], event events[], int numEvents);
+int outputFile(string file, note* notes[], event* events[], int numEvents[], int numTracks);
 
 int createMidi(chromosome C[], int numChromosomes, string file);
 
