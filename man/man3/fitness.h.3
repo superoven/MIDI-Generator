@@ -1,0 +1,61 @@
+.TH "src/header/fitness.h" 3 "Tue Jul 31 2012" "Version 1.0" "MIDI-Generator" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/header/fitness.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'chromosome\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBACCOMP_JAZZ\fP   0"
+.br
+.ti -1c
+.RI "#define \fBACCOMP_CLASS\fP   1"
+.br
+.ti -1c
+.RI "#define \fBTOTAL_ACCOMP\fP   2"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBinChord\fP (int \fBnote\fP, int key, int chord)"
+.br
+.ti -1c
+.RI "int \fBnote_score\fP (int \fBnote\fP, int key, int articulation, int timing, int chord)"
+.br
+.ti -1c
+.RI "int \fBrhythm_score\fP (int articulation, int timing)"
+.br
+.ti -1c
+.RI "void \fBcreateAccompaniment\fP ()"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define ACCOMP_CLASS   1"
+
+.SS "#define ACCOMP_JAZZ   0"
+
+.SS "#define TOTAL_ACCOMP   2"
+
+.SH "Function Documentation"
+.PP 
+.SS "void createAccompaniment ()"
+
+.SS "int inChord (intnote, intkey, intchord)"
+
+.SS "int note_score (intnote, intkey, intarticulation, inttiming, intchord)"
+
+.SS "int rhythm_score (intarticulation, inttiming)"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for MIDI-Generator from the source code\&.

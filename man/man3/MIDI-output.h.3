@@ -1,0 +1,119 @@
+.TH "src/header/MIDI-output.h" 3 "Tue Jul 31 2012" "Version 1.0" "MIDI-Generator" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/header/MIDI-output.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'chromosome\&.h'\fP
+.br
+\fC#include <string>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBnote\fP"
+.br
+.ti -1c
+.RI "struct \fBevent\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBTICKS_PER_QUARTER\fP   120"
+.br
+.ti -1c
+.RI "#define \fBMELODY_BASE_VELOCITY\fP   100"
+.br
+.ti -1c
+.RI "#define \fBACCOMP_BASE_VELOCITY\fP   60"
+.br
+.ti -1c
+.RI "#define \fBDELTA_HARD\fP   20"
+.br
+.ti -1c
+.RI "#define \fBLOW_TEMPO\fP   150"
+.br
+.ti -1c
+.RI "#define \fBHIGH_TEMPO\fP   180"
+.br
+.ti -1c
+.RI "#define \fBDELTA_TEMPO\fP   ((\fBHIGH_TEMPO\fP-\fBLOW_TEMPO\fP)/15)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBnote\fP \fBnote_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBevent\fP \fBevent_t\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBchromosomeNumNotes\fP (\fBchromosome\fP &C)"
+.br
+.ti -1c
+.RI "void \fBparseChromosome\fP (\fBchromosome\fP &C, \fBnote\fP notes[], int numNotes)"
+.br
+.ti -1c
+.RI "void \fBparseNotes\fP (\fBnote\fP notes[], \fBevent\fP events[], int numNotes)"
+.br
+.ti -1c
+.RI "void \fBsortEvents\fP (\fBevent\fP events[], int len)"
+.br
+.ti -1c
+.RI "int \fBoutputFile\fP (string file, \fBnote\fP notes[], \fBevent\fP events[], int numEvents)"
+.br
+.ti -1c
+.RI "int \fBcreateMidi\fP (\fBchromosome\fP C[], int numChromosomes, string file)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define ACCOMP_BASE_VELOCITY   60"
+
+.SS "#define DELTA_HARD   20"
+
+.SS "#define DELTA_TEMPO   ((\fBHIGH_TEMPO\fP-\fBLOW_TEMPO\fP)/15)"
+
+.SS "#define HIGH_TEMPO   180"
+
+.SS "#define LOW_TEMPO   150"
+
+.SS "#define MELODY_BASE_VELOCITY   100"
+
+.SS "#define TICKS_PER_QUARTER   120"
+
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBevent\fP \fBevent_t\fP"
+
+.SS "typedef struct \fBnote\fP \fBnote_t\fP"
+
+.SH "Function Documentation"
+.PP 
+.SS "int chromosomeNumNotes (\fBchromosome\fP &C)"
+
+.SS "int createMidi (\fBchromosome\fPC[], intnumChromosomes, stringfile)"
+
+.SS "int outputFile (stringfile, \fBnote\fPnotes[], \fBevent\fPevents[], intnumEvents)"
+
+.SS "void parseChromosome (\fBchromosome\fP &C, \fBnote\fPnotes[], intnumNotes)"
+
+.SS "void parseNotes (\fBnote\fPnotes[], \fBevent\fPevents[], intnumNotes)"
+
+.SS "void sortEvents (\fBevent\fPevents[], intlen)"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for MIDI-Generator from the source code\&.

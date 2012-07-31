@@ -1,0 +1,116 @@
+.TH "chromosome" 3 "Tue Jul 31 2012" "Version 1.0" "MIDI-Generator" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+chromosome \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBchromosome\fP (int len)"
+.br
+.RI "\fIConstructor: Makes a random chromosome\&. \fP"
+.ti -1c
+.RI "\fB~chromosome\fP ()"
+.br
+.RI "\fIDeconstructor: Removes a Chromosome\&. \fP"
+.ti -1c
+.RI "void \fBprintChromosome\fP ()"
+.br
+.RI "\fIPrint out the Chromosome\&. \fP"
+.ti -1c
+.RI "char \fBgetByte\fP (int num)"
+.br
+.RI "\fIReturns the byte at location \fInum\fP\&. \fP"
+.ti -1c
+.RI "long \fBgetLength\fP ()"
+.br
+.RI "\fIReturns the length of a chromosome\&. \fP"
+.ti -1c
+.RI "double \fBgetFitness\fP ()"
+.br
+.RI "\fIReturns the fitness of a chromosome\&. \fP"
+.ti -1c
+.RI "void \fBsetByte\fP (int num, char A)"
+.br
+.RI "\fISets byte at location \fInum\fP to \fIA\fP\&. \fP"
+.ti -1c
+.RI "void \fBsetFitness\fP (double arg)"
+.br
+.ti -1c
+.RI "void \fBfitnessEval\fP ()"
+.br
+.ti -1c
+.RI "void \fBmutate\fP ()"
+.br
+.RI "\fIMutates a chromosome\&. \fP"
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static int \fBgetNumChromosomes\fP ()"
+.br
+.ti -1c
+.RI "static void \fBcrossover\fP (\fBchromosome\fP &a, \fBchromosome\fP &b)"
+.br
+.RI "\fIPerforms crossover on two chromosomes\&. \fP"
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "double \fBfitness\fP"
+.br
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "chromosome::chromosome (intlen)"
+
+.PP
+Constructor: Makes a random chromosome\&. \fBParameters:\fP
+.RS 4
+\fIlen\fP Length of the Chromosome 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "void chromosome::crossover (\fBchromosome\fP &a, \fBchromosome\fP &b)\fC [static]\fP"
+
+.PP
+Performs crossover on two chromosomes\&. \fBParameters:\fP
+.RS 4
+\fIa\fP First Chromosome 
+.br
+\fIb\fP Second Chromosome 
+.RE
+.PP
+
+.SS "char chromosome::getByte (intnum)"
+
+.PP
+Returns the byte at location \fInum\fP\&. \fBParameters:\fP
+.RS 4
+\fInum\fP Location of byte in question 
+.RE
+.PP
+
+.SS "void chromosome::setByte (intnum, charA)"
+
+.PP
+Sets byte at location \fInum\fP to \fIA\fP\&. \fBParameters:\fP
+.RS 4
+\fInum\fP Location of the byte 
+.br
+\fIA\fP Value for the byte to take on 
+.RE
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for MIDI-Generator from the source code\&.

@@ -59,7 +59,3 @@ Then enter the main loop by which we:
 ## Todo
 
 * Use a background track
-
-* Adapt to arbitrary keys
-
-* Improve output musicality

@@ -1,0 +1,137 @@
+.TH "src/genetic.cpp" 3 "Tue Jul 31 2012" "Version 1.0" "MIDI-Generator" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/genetic.cpp \- 
+.PP
+Genetic Algorithm to create 12 bar blues\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <iostream>\fP
+.br
+\fC#include <iomanip>\fP
+.br
+\fC#include <sstream>\fP
+.br
+\fC#include <cstdlib>\fP
+.br
+\fC#include <ctime>\fP
+.br
+\fC#include <cmath>\fP
+.br
+\fC#include <vector>\fP
+.br
+\fC#include <algorithm>\fP
+.br
+\fC#include 'header/chromosome\&.h'\fP
+.br
+\fC#include 'header/genetic\&.h'\fP
+.br
+\fC#include 'header/MIDI-output\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBomp_get_num_threads\fP()   4"
+.br
+.ti -1c
+.RI "#define \fBomp_get_thread_num\fP()   0"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "bool \fBcompare_fitness\fP (const \fBchromosome\fP &e1, const \fBchromosome\fP &e2)"
+.br
+.RI "\fIDummy function for sorting\&. \fP"
+.ti -1c
+.RI "double \fBroulette\fP (int lo, int hi)"
+.br
+.RI "\fIGenerate a double precision floating point between \fIhi\fP and \fIlo\fP\&. \fP"
+.ti -1c
+.RI "void \fBstatusReport\fP (int iter, int mut, int cross, bool found, clock_t itime, \fBchromosome\fP &answer, vector< \fBchromosome\fP > &population)"
+.br
+.RI "\fIOutput the Results\&. \fP"
+.ti -1c
+.RI "int \fBmain\fP ()"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "int \fBmutationCount\fP = 0"
+.br
+.ti -1c
+.RI "int \fBcrossoverCount\fP = 0"
+.br
+.ti -1c
+.RI "int \fBiterations\fP = 0"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Genetic Algorithm to create 12 bar blues\&. 
+
+\fBAuthor:\fP
+.RS 4
+Taylor Ritenour 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+July 31, 2012 
+.RE
+.PP
+
+.SH "Function Documentation"
+.PP 
+.SS "compare_fitness (const \fBchromosome\fP &e1, const \fBchromosome\fP &e2)"
+
+.PP
+Dummy function for sorting\&. \fBParameters:\fP
+.RS 4
+\fIe1\fP Chromosome1 
+.br
+\fIe2\fP Chromosome2 
+.RE
+.PP
+
+.SS "roulette (intlo, inthi)"
+
+.PP
+Generate a double precision floating point between \fIhi\fP and \fIlo\fP\&. \fBParameters:\fP
+.RS 4
+\fIlo\fP Lower Bound 
+.br
+\fIhi\fP Upper Bound 
+.RE
+.PP
+
+.SS "statusReport (intiter, intmut, intcross, boolfound, clock_titime, \fBchromosome\fP &answer, vector< \fBchromosome\fP > &population)"
+
+.PP
+Output the Results\&. \fBParameters:\fP
+.RS 4
+\fIiter\fP Number of Iterations 
+.br
+\fImut\fP Number of Mutations 
+.br
+\fIcross\fP Number of Crossovers 
+.br
+\fIfound\fP True if an answer was found 
+.br
+\fIitime\fP Time at which the algorithm started 
+.br
+\fIanswer\fP Chromosome that the algorithm returned 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for MIDI-Generator from the source code\&.

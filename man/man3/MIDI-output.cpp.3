@@ -1,0 +1,73 @@
+.TH "src/MIDI-output.cpp" 3 "Tue Jul 31 2012" "Version 1.0" "MIDI-Generator" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/MIDI-output.cpp \- 
+.PP
+Create MIDI files out of chromosomes\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'header/MIDI-output\&.h'\fP
+.br
+\fC#include 'header/chromosome\&.h'\fP
+.br
+\fC#include <string>\fP
+.br
+\fC#include <cstdio>\fP
+.br
+\fC#include <cstdlib>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <inttypes\&.h>\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBchromosomeNumNotes\fP (\fBchromosome\fP &C)"
+.br
+.ti -1c
+.RI "void \fBparseChromosome\fP (\fBchromosome\fP &C, \fBnote_t\fP notes[], int numNotes)"
+.br
+.ti -1c
+.RI "void \fBparseNotes\fP (\fBnote\fP notes[], \fBevent\fP events[], int numNotes)"
+.br
+.ti -1c
+.RI "void \fBsortEvents\fP (\fBevent\fP events[], int len)"
+.br
+.ti -1c
+.RI "int \fBoutputFile\fP (string file, \fBnote_t\fP notes[], \fBevent_t\fP events[], int numEvents)"
+.br
+.ti -1c
+.RI "int \fBcreateMidi\fP (\fBchromosome\fP C[], int numChromosomes, string file)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "int \fBBPM\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Create MIDI files out of chromosomes\&. 
+
+\fBAuthor:\fP
+.RS 4
+Donovan McKelvey 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+July 31, 2012 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for MIDI-Generator from the source code\&.

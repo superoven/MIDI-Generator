@@ -23,6 +23,14 @@
   -------------------------
 */
 
+
+/*! 
+ * \file genetic.cpp
+ * \brief Genetic Algorithm to create 12 bar blues
+ * \author Taylor Ritenour
+ * \date July 31, 2012
+ */
+
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -39,7 +47,7 @@ using namespace std;
 #ifdef _OPENMP //Import parallelism library safely
 #include <omp.h>
 #else
-#define omp_get_num_threads() 0
+#define omp_get_num_threads() 4
 #define omp_get_thread_num() 0
 #endif
 
@@ -47,17 +55,42 @@ int mutationCount = 0; //Number of mutations that occurred (for debugging)
 int crossoverCount = 0; //Number of crossovers that occurred (for debugging)
 int iterations = 0; //Number of iterations to find a solution
 
-bool compare_fitness(const chromosome & e1, const chromosome & e2) //dummy function for sorting
+/*! 
+ * \fn compare_fitness(const chromosome & e1, const chromosome & e2)
+ * \brief Dummy function for sorting
+ * \param e1 Chromosome1
+ * \param e2 Chromosome2
+*/
+
+bool compare_fitness(const chromosome & e1, const chromosome & e2)
 {
   if( e1.fitness > e2.fitness ) return true;
   return false;
 }
 
-double roulette(int lo, int hi) { //Generate a double precision floating point between hi and lo
+/*! 
+ * \fn roulette(int lo, int hi)
+ * \brief Generate a double precision floating point between \a hi and \a lo
+ * \param lo Lower Bound
+ * \param hi Upper Bound
+*/
+
+double roulette(int lo, int hi) {
   return (((double)(rand()/((double)RAND_MAX + (double)1)) * (hi - lo)) + lo);
 }
 
-void statusReport(int iter, int mut, int cross, bool found, clock_t itime, chromosome& answer, vector<chromosome>& population) //Tell us what happened
+/*! 
+ * \fn statusReport(int iter, int mut, int cross, bool found, clock_t itime, chromosome& answer, vector<chromosome>& population)
+ * \brief Output the Results
+ * \param iter Number of Iterations
+ * \param mut Number of Mutations
+ * \param cross Number of Crossovers
+ * \param found True if an answer was found
+ * \param itime Time at which the algorithm started
+ * \param answer Chromosome that the algorithm returned
+*/
+
+void statusReport(int iter, int mut, int cross, bool found, clock_t itime, chromosome& answer, vector<chromosome>& population)
 {
   if (found)
     {

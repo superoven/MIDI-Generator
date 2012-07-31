@@ -34,6 +34,13 @@
   -------------------------
 */
 
+/*! 
+ * \file fitness.cpp
+ * \brief Evaluate the fitness of a given chromosome
+ * \author Aaron Huffman
+ * \date July 31, 2012
+ */
+
 #include "header/chromosome.h"
 #include "header/fitness.h"
 #include <stdio.h>

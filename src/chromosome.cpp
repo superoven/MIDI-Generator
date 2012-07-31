@@ -13,6 +13,13 @@
   -------------------------
 */
 
+/*! 
+ * \file chromosome.cpp
+ * \brief Encapsulates the data of a chromosome in the genetic algorithm
+ * \author Taylor Ritenour
+ * \date July 31, 2012
+ */
+
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -21,13 +28,16 @@
 #include "header/chromosome.h"
 using namespace std;
 
-
-
 int chromosome::numchromosomes = 0; //Static data needs to be declared like this or it throws a shit fit.
+
+/*! 
+ * \fn chromosome::chromosome(int len)
+ * \brief Constructor: Makes a random chromosome
+ * \param len Length of the Chromosome
+*/
 
 chromosome::chromosome(int len)
 {
-  //Constructor
   //If fitness is -1, it hasn't been set by the algorithm yet.
   bytes.reserve(len); //Reserve the vector memory for the bytes
   length = len;
@@ -36,11 +46,20 @@ chromosome::chromosome(int len)
   for(int i = 0; i < len; i++) bytes.push_back((char)(rand() % GENE_POSSIBILITIES)); //Generate random bytes for the chromosome
 }
 
+/*! 
+ * \fn chromosome::~chromosome()
+ * \brief Deconstructor: Removes a Chromosome
+*/
+
 chromosome::~chromosome()
 {
-  //Deconstructor
   numchromosomes--; //Yeah that's it. The compiler will handle the rest.
 }
+
+/*! 
+ * \fn void chromosome::printChromosome()
+ * \brief Print out the Chromosome
+*/
 
 void chromosome::printChromosome()
 {
@@ -59,15 +78,41 @@ void chromosome::printChromosome()
   cout << "Fitness: " << dec << fitness << endl;
 }
 
+/*! 
+ * \fn char chromosome::getByte(int num)
+ * \brief Returns the byte at location \a num
+ * \param num Location of byte in question
+*/
+
 char chromosome::getByte(int num) { return bytes[num]; } //Get the 'num' byte
+
+/*! 
+ * \fn long chromosome::getLength()
+ * \brief Returns the length of a chromosome
+*/
 
 long chromosome::getLength() { return length; } //Get the length of the chromosome
 
+/*! 
+ * \fn double chromosome::getFitness()
+ * \brief Returns the fitness of a chromosome
+*/
+
 double chromosome::getFitness() { return fitness; } //Get the fitness of the chromosome
+
+/*! 
+ * \fn void chromosome::setByte(int num, char A)
+ * \brief Sets byte at location \a num to \a A
+ * \param num Location of the byte
+ * \param A Value for the byte to take on
+*/
 
 void chromosome::setByte(int num, char A) { bytes[num] = A; } //Set the byte of the chromosome.
   
-//void chromosome::setFitness(double arg) { fitness = ((arg > 0) ? arg : 0); } //Set the fitness of the chromosome, defaults to 0
+/*! 
+ * \fn void chromosome::mutate()
+ * \brief Mutates a chromosome
+*/
 
 void chromosome::mutate()
 {
@@ -79,6 +124,13 @@ void chromosome::mutate()
   bytes[randbyte] ^= 1 << randbit;
   fitness = -1;
 }
+
+/*! 
+ * \fn chromosome::crossover(chromosome& a, chromosome& b)
+ * \brief Performs crossover on two chromosomes
+ * \param a First Chromosome
+ * \param b Second Chromosome
+*/
 
 void chromosome::crossover(chromosome& a, chromosome& b) 	//combine chromosome a and b
 {

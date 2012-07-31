@@ -27,8 +27,6 @@ testchrom: $(TCHROMOBJ) $(HEADERS)
 
 testmidi: $(TMIDIOBJ) $(HEADERS)
 	$(CC) $(CFLAGS) $(TMIDIOBJ) -o $@
-	./$@
-	$(PLAYBACK) $(TESTMIDI)
 
 testfit: $(TFITOBJ) $(HEADERS)
 	$(CC) $(CFLAGS) $(TFITOBJ) -o $@

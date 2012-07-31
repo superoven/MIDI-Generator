@@ -10,6 +10,13 @@
 	outputed to the MIDI file
 */
 
+/*! 
+ * \file MIDI-output.cpp
+ * \brief Create MIDI files out of chromosomes
+ * \author Donovan McKelvey 
+ * \date July 31, 2012
+ */
+
 #include "header/MIDI-output.h"
 #include "header/chromosome.h"
 #include <string>
@@ -37,7 +44,7 @@ int chromosomeNumNotes(chromosome &C)
   return numNotes;
 }
 
-void parseChromosome(chromosome &C, note notes[], int numNotes)
+void parseChromosome(chromosome &C, note_t notes[], int numNotes)
 {
   bool melody = C.getByte(0)&1;
   BPM = LOW_TEMPO + (((unsigned char)(C.getByte(0))>>4)*DELTA_TEMPO);
@@ -280,7 +287,7 @@ void sortEvents(event events[], int len)
     }
 }
 
-int outputFile(string file, note notes[], event events[], int numEvents)
+int outputFile(string file, note_t notes[], event_t events[], int numEvents)
 {
   FILE* out;
 
