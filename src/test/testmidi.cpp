@@ -129,6 +129,17 @@ int main()
 	else
 		cout<<"An error occurred with swung\n";
 
+	cout<<"Tonguing on top of chromatic\n";
+	chromatic.setByte(0,0);
+	chromosome duo[2] = {chromosome(1), chromosome(1)};
+	duo[0] = tonguing;
+	duo[1] = chromatic;
+	cout<<"somehow made the array\n";
+	if(createMidi(duo,2,"midi/mix.mid")==0)
+		cout<<"Saved to midi/mix.mid\n";
+	else
+		cout<<"An error occurred\n";
+
 	cout<<"Testing complete, check midi files to confirm accuracy\n";
 
 	return 0;

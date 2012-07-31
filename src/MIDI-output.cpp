@@ -20,7 +20,7 @@
 
 using namespace std;
 
-int BPM;
+int BPM = LOW_TEMPO;
 
 int chromosomeNumNotes(chromosome &C)
 {
@@ -40,7 +40,8 @@ int chromosomeNumNotes(chromosome &C)
 void parseChromosome(chromosome &C, note notes[], int numNotes)
 {
   bool melody = C.getByte(0)&1;
-  BPM = LOW_TEMPO + (((unsigned char)(C.getByte(0))>>4)*DELTA_TEMPO);
+  if(melody)
+  	BPM = LOW_TEMPO + (((unsigned char)(C.getByte(0))>>4)*DELTA_TEMPO);
 
   note tmp;
   unsigned char tmp_bytes[4];
@@ -280,7 +281,7 @@ void sortEvents(event events[], int len)
     }
 }
 
-int outputFile(string file, note notes[], event events[], int numEvents)
+int outputFile(string file, note* notes[], event* events[], int numEvents[], int numTracks)
 {
   FILE* out;
 
@@ -290,8 +291,8 @@ int outputFile(string file, note notes[], event events[], int numEvents)
   /* Header info */
   char chunkID[] = "MThd";	// Header name
   char chunkSize[4] = {0,0,0,6};	// size of head
-  char formatType[2] = {0,0};		// Type of midi 0/1/2
-  char numTracks[2] = {0,1};		
+  char formatType[2] = {0,1};		// Type of midi 0/1/2
+  char num_tracks[2] = {((numTracks>>8)&255),(numTracks&255)};		
   char timeDivision[2] = {(TICKS_PER_QUARTER>>8)&127, // make sure MSB is 0
 			  TICKS_PER_QUARTER&255};
   uint32_t microsecs_per_quarter = (60*1000*1000)/BPM;
@@ -302,116 +303,142 @@ int outputFile(string file, note notes[], event events[], int numEvents)
   fwrite(chunkID, 4, 1, out);
   fwrite(chunkSize, 1, 4, out);
   fwrite(formatType, 1, 2, out);
-  fwrite(numTracks, 1, 2, out);
+  fwrite(num_tracks, 1, 2, out);
   fwrite(timeDivision, 1, 2, out);
 
   /* Track info */
-  uint32_t track_len = 0;
   char * trackData = (char *) malloc(1073741824); // tracklen is 4 bytes long, buffer of max len
   char endOfTrack[4] = {0x00,0xFF,0x2F,0x00};
 
-  // set tempo
-  trackData[track_len++] = 0x00;
-  trackData[track_len++] = 0xFF;
-  trackData[track_len++] = 0x51;
-  trackData[track_len++] = 0x03;
-  for(int i=0;i<3;i++)
-    trackData[track_len++] = tempo[i];
+  for(int j=0;j<numTracks;j++)
+  {
+	  uint32_t track_len = 0;
+	  if(j==0)
+	  {
+		  // set tempo
+		  trackData[track_len++] = 0x00;
+		  trackData[track_len++] = 0xFF;
+		  trackData[track_len++] = 0x51;
+		  trackData[track_len++] = 0x03;
+		  for(int i=0;i<3;i++)
+			trackData[track_len++] = tempo[i];
+	  }
 
-  /* Conversion of notes into MIDI events */
-  for(int i=0;i<numEvents;i++)
-    {
-      /* 	delta time code, variable length MSB is 1 if more data follows,
-		0 if end of data
-      */
-
-      if(i==0)
-	trackData[track_len++] = 0x00;
-      else
-	{
-	  int dtime_len=4;
-	  uint32_t diff_time = events[i].time - events[i-1].time;
-	  unsigned char dtime[4] = {(diff_time>>21)&127,
-				    (diff_time>>14)&127,
-				    (diff_time>>7)&127,
-				    diff_time&127};
-	  for(int i=3;i>=0;i--)
-	    {
-	      if(dtime[i]==0)
+	  /* Conversion of notes into MIDI events */
+	  for(int i=0;i<numEvents[j];i++)
 		{
-		  dtime_len = max(1,3-i);
-		  i=-1;
+		  /* 	delta time code, variable length MSB is 1 if more data follows,
+			0 if end of data
+		  */
+
+		  if(i==0)
+			trackData[track_len++] = 0x00;
+		  else
+		{
+		  int dtime_len=4;
+		  uint32_t diff_time = events[j][i].time - events[j][i-1].time;
+		  unsigned char dtime[4] = {(diff_time>>21)&127,
+						(diff_time>>14)&127,
+						(diff_time>>7)&127,
+						diff_time&127};
+		  for(int i=3;i>=0;i--)
+			{
+			  if(dtime[i]==0)
+			{
+			  dtime_len = max(1,3-i);
+			  i=-1;
+			}
+			}
+		  for(int i=4-dtime_len;i<4;i++)
+			{
+			  if(i<3)
+			dtime[i]=dtime[i] | 1<<7; // MSB must be 1 if another byte follows
+			  trackData[track_len++] = dtime[i];
+			}
 		}
-	    }
-	  for(int i=4-dtime_len;i<4;i++)
-	    {
-	      if(i<3)
-		dtime[i]=dtime[i] | 1<<7; // MSB must be 1 if another byte follows
-	      trackData[track_len++] = dtime[i];
-	    }
-	}
 
-      if(events[i].state==0)
-	trackData[track_len++] = 0x90; // note on
-      else
-	trackData[track_len++] = 0x80; // note off
-      trackData[track_len++] = notes[events[i].note].pitch;	 // note
-      trackData[track_len++] = notes[events[i].note].velocity; // hardness
-      if(events[i].state!=0)
-	trackData[track_len-1] = 0x00;
-    }
+		  if(events[j][i].state==0)
+			trackData[track_len++] = 0x90; // note on
+		  else
+			trackData[track_len++] = 0x80; // note off
+		  trackData[track_len++] = notes[j][events[j][i].note].pitch;	 // note
+		  trackData[track_len++] = notes[j][events[j][i].note].velocity; // hardness
+		  if(events[j][i].state!=0)
+			trackData[track_len-1] = 0x00;
+		}
 
-  char trackID[] = "MTrk";
-  char trackSize[4] = {((track_len>>24)&255),
-		       ((track_len>>16)&255),
-		       ((track_len>>8)&255),
-		       (track_len&255)};
+	  char trackID[] = "MTrk";
+	  char trackSize[4] = {((track_len>>24)&255),
+				   ((track_len>>16)&255),
+				   ((track_len>>8)&255),
+				   (track_len&255)};
 
-  fwrite(trackID, 4, 1, out);
-  fwrite(trackSize, 1, 4, out);
+	  fwrite(trackID, 4, 1, out);
+	  fwrite(trackSize, 1, 4, out);
 
-  fwrite(trackData, 1, track_len, out);
-  fwrite(endOfTrack, 1, 4, out);
+	  fwrite(trackData, 1, track_len, out);
+	  fwrite(endOfTrack, 1, 4, out);
+  }
 
   fclose(out);	
 
   free(trackData);
+  free(numEvents);
+  for(int i=0;i<numTracks;i++)
+  {
+	free(notes[i]);
+	free(events[i]);
+  }
   free(notes);
   free(events);
-
   return 0;
 }
 
 int createMidi(chromosome C[], int numChromosomes, string file)
 {
-  note_t* notes;
-  event_t* events;
 
+	note_t** track_notes;
+	event_t** track_events;
+
+	int* numEvents;
+
+	track_notes = (note_t**) malloc(sizeof(note_t*) * numChromosomes);
+	track_events = (event_t**) malloc(sizeof(event_t*) * numChromosomes);
+
+	if((track_notes==NULL)||(track_events==NULL))
+		return 1;
+
+	numEvents = (int*) malloc(sizeof(int) * numChromosomes);
+
+/*  note_t* notes;
+  event_t* events;
+*/
   // Testing, only look at first note
 
-  int numNotes = chromosomeNumNotes(C[0]);
+	for(int i=0;i<numChromosomes;i++)
+	{
+		int numNotes = chromosomeNumNotes(C[i]);
+		numEvents[i] = 2*numNotes;
 
-  notes = (note_t*) malloc(sizeof(note_t) * numNotes);
+		track_notes[i] = (note_t*) malloc(sizeof(note_t) * numNotes);
 
-  if(notes==NULL)
-    {
-      printf("3a\n");
-      return 1;
-    }
+		if(track_notes[i]==NULL)
+			return 1;
 
-  parseChromosome(C[0],notes,numNotes);
+		parseChromosome(C[i],track_notes[i],numNotes);
 
-  events = (event_t*) malloc(sizeof(event_t) * 2 * numNotes);
+		track_events[i] = (event_t*) malloc(sizeof(event_t) * 2 * numEvents[i]);
 
-  if(events==NULL)
-    {
-      free(notes);
-      return 1;
-    }
+		if(track_events[i]==NULL)
+		{
+			//free(notes);
+			return 1;
+		}
 
-  parseNotes(notes,events,numNotes);
+		parseNotes(track_notes[i],track_events[i],numNotes);
 
-  sortEvents(events,2*numNotes);
+		sortEvents(track_events[i],numEvents[i]);
+	}
 
-  return outputFile(file,notes,events,2*numNotes);
+	return outputFile(file,track_notes,track_events,numEvents,numChromosomes);
 }
